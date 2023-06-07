@@ -1,4 +1,4 @@
-unit UFreddy;
+unit UTalkoff;
 interface
 
 uses
@@ -7,44 +7,46 @@ uses
 
 Const
 
-//Максимальное значение спрайтов Фредди движения влево и вправо соответственно
-MaxImageFreddy = 3;
-MaxImgFreddyMoveLeft = 3;
-MaxImgFreddyMoveRight = 3;
-MaxImgFreddyMoveSitLeft = 1;
-MaxImgFreddyMoveSitRight = 1;
+//РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРїСЂР°Р№С‚РѕРІ РРіРѕСЂСЏ РґРІРёР¶РµРЅРёСЏ РІР»РµРІРѕ Рё РІРїСЂР°РІРѕ СЃРѕРѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕ
+MaxImageTalkoff = 3;
+MaxImgTalkoffMoveLeft = 3;
+MaxImgTalkoffMoveRight = 3;
+//MaxImgFreddyMoveSitLeft = 1;
+//MaxImgFreddyMoveSitRight = 1;
 
 
 type
-    TFreddyDirection = (FreddydirectionLeft, FreddydirectionCenter, FreddydirectionRight);
+    TTalkoffDirection = (TalkoffdirectionLeft, TalkoffdirectionCenter, TalkoffdirectionRight);
 
 type
 
-   TFreddySpritesArr = array[0..MaxImageFreddy] of BitMap;
-   pFreddySpritesArr = ^TFreddySpritesArr;
+   TTalkoffSpritesArr = array[0..MaxImageTalkoff] of BitMap;
+   pTalkoffSpritesArr = ^TTalkoffSpritesArr;
 
 type
 
-  TFreddy = class (TObject)
+  TTalkoff = class (TObject)
   public
   Name: string;
 
-  ImgMassFreddyMoveLeft: TList;
-  ImgMassFreddyMoveRight: TList;
-  ImgMassFreddyMoveSitLeft: TList;
-  ImgMassFreddyMoveSitRight: TList;
+  ImgMassTalkoffMoveLeft: TList;
+  ImgMassTalkoffMoveRight: TList;
+//  ImgMassTalkoffMoveSitLeft: TList;
+//  ImgMassTalkoffMoveSitRight: TList;
 
   owner:TWinControl;
   shagx,shagy, sprleftindex, sprrightindex, sprindexshag:integer;
-  XFreddy,YFreddy,sprindex:integer;
-  FreddySit: boolean;
-  ThereMove: TFreddyDirection;
+  XTalkoff,YTalkoff,sprindex:integer;
+//  FreddySit: boolean;
+
+//РњР°СЂРєРµСЂ РЅР°РїСЂР°РІР»РµРЅРёСЏ РРіРѕСЂСЏ
+  ThereMove: TTalkoffDirection;
   TimerAnimation: TTimer;
   procedure Show;
 //  procedure Gravity;
   procedure TimerAnimationProcessing(Sender: TObject);
-  Constructor CreateFreddy(X,Y: integer; ownerForm: TWinControl; var pFreddySpritesLeft, pFreddySpritesRight,
-                             pFreddySpritesMoveSitLeft, pFreddySpritesMoveSitRight: TList);
+  Constructor CreateTalkoff(X,Y: integer; ownerForm: TWinControl; var pTalkoffSpritesLeft, pTalkoffSpritesRight
+                             {pTalkoffSpritesMoveSitLeft, pTalkoffSpritesMoveSitRight}: TList);
   Destructor Destroy(); override;
   end;
 
@@ -52,8 +54,8 @@ implementation
 
 Uses UMainProg, UWorld;
 
-constructor TFreddy.CreateFreddy(X, Y:integer; ownerForm: TWinControl; var pFreddySpritesLeft, pFreddySpritesRight,
-                             pFreddySpritesMoveSitLeft, pFreddySpritesMoveSitRight: TList);
+constructor TTalkoff.CreateTalkoff(X, Y:integer; ownerForm: TWinControl; var pTalkoffSpritesLeft, pTalkoffSpritesRight
+                             {pTalkoffSpritesMoveSitLeft, pTalkoffSpritesMoveSitRight}: TList);
 var
 i:integer;
 begin
@@ -62,65 +64,65 @@ self.TimerAnimation:=TTimer.Create(nil);
 self.TimerAnimation.OnTimer:=self.TimerAnimationProcessing;
 self.TimerAnimation.Interval:=round(145);
 //self.TimTimerAnimation.Interval:=round((Random*120)+(Random*60)+1);
-//Максимальная координата по X для мухи, чтобы она развернулась
-ThereMove := FreddydirectionRight;
-XFreddy:=X;
-YFreddy:=Y;
+//РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° РїРѕ X РґР»СЏ РјСѓС…Рё, С‡С‚РѕР±С‹ РѕРЅР° СЂР°Р·РІРµСЂРЅСѓР»Р°СЃСЊ
+ThereMove := TalkoffdirectionRight;
+XTalkoff:=X;
+YTalkoff:=Y;
 //self.grad:=0;
 self.owner:=ownerForm;
-//Загружаем все спрайты Фредди
+//Р—Р°РіСЂСѓР¶Р°РµРј РІСЃРµ СЃРїСЂР°Р№С‚С‹ РРіРѕСЂСЏ
 
-ImgMassFreddyMoveLeft := pFreddySpritesLeft;
-ImgMassFreddyMoveRight := pFreddySpritesRight;
-ImgMassFreddyMoveSitLeft := pFreddySpritesMoveSitLeft;
-ImgMassFreddyMoveSitRight := pFreddySpritesMoveSitRight;
+ImgMassTalkoffMoveLeft := pTalkoffSpritesLeft;
+ImgMassTalkoffMoveRight := pTalkoffSpritesRight;
+//ImgMassTalkoffMoveSitLeft := pTalkoffSpritesMoveSitLeft;
+//ImgMassTalkoffMoveSitRight := pTalkoffSpritesMoveSitRight;
 
-//Заводим переменные для анимации Фредди
-FreddySit := false;
+//Р—Р°РІРѕРґРёРј РїРµСЂРµРјРµРЅРЅС‹Рµ РґР»СЏ Р°РЅРёРјР°С†РёРё РРіРѕСЂСЏ
+//TalkoffSit := false;
 shagx:=0;
 shagy:=0;
 sprleftindex := 0;
 sprrightindex := 0;
 sprindexshag := 0;
 //ThereMove:=OwldirectionCenter;
-//Включаем таймер анимации Фредди
+//Р’РєР»СЋС‡Р°РµРј С‚Р°Р№РјРµСЂ Р°РЅРёРјР°С†РёРё РРіРѕСЂСЏ
 self.TimerAnimation.Enabled:=true;
 end;
 
-procedure TFreddy.TimerAnimationProcessing(Sender: TObject);
+procedure TTalkoff.TimerAnimationProcessing(Sender: TObject);
 begin
-//Фредди идёт влево
-//Здесь мы изменяем номер спрайта
-//Фредди идёт влево
-If (ThereMove = FreddydirectionLeft) then
+//РРіРѕСЂСЊ РёРґС‘С‚ РІР»РµРІРѕ
+//Р—РґРµСЃСЊ РјС‹ РёР·РјРµРЅСЏРµРј РЅРѕРјРµСЂ СЃРїСЂР°Р№С‚Р°
+//РРіРѕСЂСЊ РёРґС‘С‚ РІР»РµРІРѕ
+If (ThereMove = TalkoffdirectionLeft) then
   begin
    sprleftindex := sprleftindex + sprindexshag;
-   if sprleftindex >= MaxImgFreddyMoveLeft then
+   if sprleftindex >= MaxImgTalkoffMoveLeft then
       sprleftindex := 0;
    end;
-//Фредди идёт вправо
-If (ThereMove = FreddydirectionRight) then
+//РРіРѕСЂСЊ РёРґС‘С‚ РІРїСЂР°РІРѕ
+If (ThereMove = TalkoffdirectionRight) then
    begin
    sprrightindex := sprrightindex + sprindexshag;
-   if sprrightindex >= MaxImgFreddyMoveRight then
+   if sprrightindex >= MaxImgTalkoffMoveRight then
      sprrightindex := 0;
    end;
 end;
 
-procedure TFreddy.Show;
+procedure TTalkoff.Show;
 begin
 
 //Gravity;
 
-//Отрисовываем Фредди
-   If (ThereMove = FreddydirectionLeft) then
+//РћС‚СЂРёСЃРѕРІС‹РІР°РµРј РРіРѕСЂСЏ
+   If (ThereMove = TalkoffdirectionLeft) then
      begin
-     VirtBitmap.Canvas.Draw(self.XFreddy, self.YFreddy, self.ImgMassFreddyMoveLeft.Items[sprleftindex]);
+     VirtBitmap.Canvas.Draw(self.XTalkoff, self.YTalkoff, self.ImgMassTalkoffMoveLeft.Items[sprleftindex]);
      end;
 
-   If (ThereMove = FreddydirectionRight) then
+   If (ThereMove = TalkoffdirectionRight) then
      begin
-     VirtBitmap.Canvas.Draw(self.XFreddy, self.YFreddy, self.ImgMassFreddyMoveRight.Items[sprrightindex]);
+     VirtBitmap.Canvas.Draw(self.XTalkoff, self.YTalkoff, self.ImgMassTalkoffMoveRight.Items[sprrightindex]);
      end;
 
    {if (Freddy.FreddySit = false) then
@@ -159,18 +161,18 @@ sprindex: byte;
 FirstBrick: integer;
 LastBrick : integer;
 begin
-//Берём в цикле перечсляем все спрайты земли и сравниваем прямоугольник спрайта земли с прямоугольником Фредди.
-//Проверяем, если под ногами Фредди грунт
+//Р‘РµСЂС‘Рј РІ С†РёРєР»Рµ РїРµСЂРµС‡СЃР»СЏРµРј РІСЃРµ СЃРїСЂР°Р№С‚С‹ Р·РµРјР»Рё Рё СЃСЂР°РІРЅРёРІР°РµРј РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє СЃРїСЂР°Р№С‚Р° Р·РµРјР»Рё СЃ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєРѕРј Р¤СЂРµРґРґРё.
+//РџСЂРѕРІРµСЂСЏРµРј, РµСЃР»Рё РїРѕРґ РЅРѕРіР°РјРё Р¤СЂРµРґРґРё РіСЂСѓРЅС‚
 for i := FirstBrick to LastBrick do
   begin
-   //Читаем из массива игрового пространства номер спрайта
+   //Р§РёС‚Р°РµРј РёР· РјР°СЃСЃРёРІР° РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР° РЅРѕРјРµСЂ СЃРїСЂР°Р№С‚Р°
   sprindex := GameWorld.GameWorldArr[i];
-  //Необходимо пересчитать Xscreen в координаты виртуального экрана.
+  //РќРµРѕР±С…РѕРґРёРјРѕ РїРµСЂРµСЃС‡РёС‚Р°С‚СЊ Xscreen РІ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРёСЂС‚СѓР°Р»СЊРЅРѕРіРѕ СЌРєСЂР°РЅР°.
 
   Form1.OverlapRects(R1, R2: TRect): Boolean;
 
   //VirtBitmap.Canvas.Draw(xScreen, GameWorld.WorldY, GameWorld.ImgGameWorld[sprindex]);
-  // Прибавляем 10. 10 - размер спрайтов по 10 пикселей, учтём это
+  // РџСЂРёР±Р°РІР»СЏРµРј 10. 10 - СЂР°Р·РјРµСЂ СЃРїСЂР°Р№С‚РѕРІ РїРѕ 10 РїРёРєСЃРµР»РµР№, СѓС‡С‚С‘Рј СЌС‚Рѕ
   xScreen:= xScreen + TextureWidth;
   end;
 
@@ -180,36 +182,37 @@ if YFreddy<= 310 then
   end;
 end;}
 
-//Это деструктор Фредди
-destructor TFreddy.Destroy;
+//Р­С‚Рѕ РґРµСЃС‚СЂСѓРєС‚РѕСЂ РРіРѕСЂСЏ
+destructor TTalkoff.Destroy;
 var
 i:byte;
 begin
-//Здесь мы удаляем из памяти Фредди
+//Р—РґРµСЃСЊ РјС‹ СѓРґР°Р»СЏРµРј РёР· РїР°РјСЏС‚Рё Р¤СЂРµРґРґРё
 {For i:=0 to  MaxImgFreddyMoveLeft-1 Do
    begin
-   //Если объект существует в памяти, то мы его удаляем
+   //Р•СЃР»Рё РѕР±СЉРµРєС‚ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ РїР°РјСЏС‚Рё, С‚Рѕ РјС‹ РµРіРѕ СѓРґР°Р»СЏРµРј
    if ImgMassFreddyMoveLeft[i]<>nil then ImgMassFreddyMoveLeft[i].free;
    end;
 For i:=0 to  MaxImgFreddyMoveRight-1 Do
    begin
-   //Если объект существует в памяти, то мы его удаляем
+   //Р•СЃР»Рё РѕР±СЉРµРєС‚ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ РїР°РјСЏС‚Рё, С‚Рѕ РјС‹ РµРіРѕ СѓРґР°Р»СЏРµРј
    if ImgMassFreddyMoveRight[i]<>nil then ImgMassFreddyMoveRight[i].free;
    end;
 For i:=0 to  MaxImgFreddyMoveSitLeft-1 Do
    begin
-   //Если объект существует в памяти, то мы его удаляем
+   //Р•СЃР»Рё РѕР±СЉРµРєС‚ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ РїР°РјСЏС‚Рё, С‚Рѕ РјС‹ РµРіРѕ СѓРґР°Р»СЏРµРј
    if ImgMassFreddyMoveSitLeft[i]<>nil then ImgMassFreddyMoveSitLeft[i].free;
    end;
 For i:=0 to  MaxImgFreddyMoveSitRight-1 Do
    begin
-   //Если объект существует в памяти, то мы его удаляем
+   //Р•СЃР»Рё РѕР±СЉРµРєС‚ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ РїР°РјСЏС‚Рё, С‚Рѕ РјС‹ РµРіРѕ СѓРґР°Р»СЏРµРј
    if ImgMassFreddyMoveSitRight[i]<>nil then ImgMassFreddyMoveSitRight[i].free;
    end;}
-//Удаляем таймер анимации
+//РЈРґР°Р»СЏРµРј С‚Р°Р№РјРµСЂ Р°РЅРёРјР°С†РёРё
 TimerAnimation.free;
-//Вызов деструктора родительского класса
+//Р’С‹Р·РѕРІ РґРµСЃС‚СЂСѓРєС‚РѕСЂР° СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ РєР»Р°СЃСЃР°
 inherited;
 end;
 
 end.
+
