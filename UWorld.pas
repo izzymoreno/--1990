@@ -4,15 +4,15 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, UFreddy;
+  Dialogs, ExtCtrls;
 
   Const
 
-  //Максимальное длина игрового мира
+  //РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РґР»РёРЅР° РёРіСЂРѕРІРѕРіРѕ РјРёСЂР°
   TextureWidth = 16; //10
-// Длина игрового пространства
+// Р”Р»РёРЅР° РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР°
   GameWorldMaxX = 110;
-//Массив игрового пространства
+//РњР°СЃСЃРёРІ РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР°
   GameWorldConst: array[0..GameWorldMaxX - 1] of byte = (0, 1, 2, 3, 4, 5, 6, 0, 0, 0,
                                                          0, 1, 2, 3, 4, 5, 6, 0, 0, 0,
                                                          0, 1, 2, 3, 4, 5, 6, 0, 0, 0,
@@ -28,13 +28,13 @@ type
 
   TGameWorld = class (TObject)
   public
-  //TimerAnimation: TTimer;
-  //Массив спрайтов игрового пространства
+  TimerAnimation: TTimer;
+  //РњР°СЃСЃРёРІ СЃРїСЂР°Р№С‚РѕРІ РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР°
   WorldX, WorldY: integer;
   ImgGameWorld: array[0..6] of TBitMap;
-  //Задаём спрайты игрового пространства
+  //Р—Р°РґР°С‘Рј СЃРїСЂР°Р№С‚С‹ РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР°
   GameWorldArr: array[0..GameWorldMaxX - 1] of byte;
-  //procedure TimerAnimationProccessing(Sender: TObject);
+//  procedure TimerAnimationProccessing(Sender: TObject);
   procedure Show;
   Constructor CreateGameWorld(ownerForm: TWinControl);
   Destructor Destroy(); override;
@@ -48,9 +48,9 @@ constructor TGameWorld.CreateGameWorld(ownerForm: TWinControl);
 var
 i:integer;
 begin
-//Присваиваем значение переменным игрового пространства по X и Y
-WorldX := 0;//40
-WorldY := 350;
+//РџСЂРёСЃРІР°РёРІР°РµРј Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅС‹Рј РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР° РїРѕ X Рё Y
+WorldX := 0; //40
+WorldY := 625;
 
 For i:=0 to length(GameWorldArr) - 1  Do
   begin
@@ -58,22 +58,38 @@ For i:=0 to length(GameWorldArr) - 1  Do
   end;
 
 
-//Загружаем спрайты в массив игрового пространства
+//Р—Р°РіСЂСѓР¶Р°РµРј СЃРїСЂР°Р№С‚С‹ РІ РјР°СЃСЃРёРІ РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР°
 For i := 0 to length(ImgGameWorld) - 1  Do
    begin
    ImgGameWorld[i]:=TBitMap.Create;
-   ImgGameWorld[i].LoadFromFile(ExePath + 'Graphics\Ground'+IntToStr(i)+'.bmp');
+   ImgGameWorld[i].LoadFromFile(ExePath + 'Graphics\Ground\Ground'+IntToStr(i)+'.bmp');
    ImgGameWorld[i].Transparent:=True;
    ImgGameWorld[i].TransparentMode:=tmFixed;
    ImgGameWorld[i].TransparentColor:=clBlack;
    //ImgMassStar[i].Canvas.Brush.Color:=clPurple;
    end;
-//Включаем таймер звёзд
-//self.TimerAnimation := TTimer.Create(nil);
+//Р’РєР»СЋС‡Р°РµРј С‚Р°Р№РјРµСЂ Р·РІС‘Р·Рґ
+self.TimerAnimation := TTimer.Create(nil);
 //self.TimerAnimation.OnTimer:=self.TimerAnimationProccessing;
-//self.TimerAnimation.Interval:=round((Random*200)+500);
-//TimerAnimation.Enabled:=true;
+self.TimerAnimation.Interval:=round((Random*200)+500);
+TimerAnimation.Enabled:=true;
 end;
+
+{procedure TGameWorld.Show;
+var
+i, Xscreen: integer;
+sprindex: byte;
+begin
+xScreen := self.WorldX;
+for i := 0 to 90 do
+  begin
+   //Р§РёС‚Р°РµРј РёР· РјР°СЃСЃРёРІР° РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР° РЅРѕРјРµСЂ СЃРїСЂР°Р№С‚Р°
+   sprindex := self.GameWorld[i] - 1;
+  VirtBitmap.Canvas.Draw(xScreen, self.WorldY, self.ImgGameWorld[sprindex]);
+  // РџСЂРёР±Р°РІР»СЏРµРј 10. 10 - СЂР°Р·РјРµСЂ СЃРїСЂР°Р№С‚РѕРІ РїРѕ 10 РїРёРєСЃРµР»РµР№, СѓС‡С‚С‘Рј СЌС‚Рѕ
+  xScreen:= xScreen + 10;
+  end;
+end;}
 
 procedure TGameWorld.Show;
 var
@@ -83,8 +99,9 @@ FirstBrick: integer;
 LastBrick : integer;
 begin
 xScreen := 0;
+//self.WorldX;
 
-//Мы должны пиксели координаты XWorld пересчитать в первый кирпич, с которого мы должны начать выводить игровое пространство.
+//РњС‹ РґРѕР»Р¶РЅС‹ РїРёРєСЃРµР»Рё РєРѕРѕСЂРґРёРЅР°С‚С‹ XWorld РїРµСЂРµСЃС‡РёС‚Р°С‚СЊ РІ РїРµСЂРІС‹Р№ РєРёСЂРїРёС‡, СЃ РєРѕС‚РѕСЂРѕРіРѕ РјС‹ РґРѕР»Р¶РЅС‹ РЅР°С‡Р°С‚СЊ РІС‹РІРѕРґРёС‚СЊ РёРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ.
 FirstBrick := round(WorldX div TextureWidth);
 LastBrick := FirstBrick + round(VirtBitmap.Width div TextureWidth * TextureWidth/TextureWidth);
 if FirstBrick <= 0 then
@@ -100,11 +117,11 @@ if LastBrick >= Length(GameWorldArr) then
 xScreen := -round(WorldX - WorldX div TextureWidth * TextureWidth);
 for i := FirstBrick to LastBrick do
   begin
-   //Читаем из массива игрового пространства номер спрайта
+   //Р§РёС‚Р°РµРј РёР· РјР°СЃСЃРёРІР° РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР° РЅРѕРјРµСЂ СЃРїСЂР°Р№С‚Р°
   sprindex := self.GameWorldArr[i];
-  //Необходимо пересчитать Xscreen в координаты виртуального экрана.
+  //РќРµРѕР±С…РѕРґРёРјРѕ РїРµСЂРµСЃС‡РёС‚Р°С‚СЊ Xscreen РІ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРёСЂС‚СѓР°Р»СЊРЅРѕРіРѕ СЌРєСЂР°РЅР°.
   VirtBitmap.Canvas.Draw(xScreen, self.WorldY, self.ImgGameWorld[sprindex]);
-  // Прибавляем 10. 10 - размер спрайтов по 10 пикселей, учтём это
+  // РџСЂРёР±Р°РІР»СЏРµРј 10. 10 - СЂР°Р·РјРµСЂ СЃРїСЂР°Р№С‚РѕРІ РїРѕ 10 РїРёРєСЃРµР»РµР№, СѓС‡С‚С‘Рј СЌС‚Рѕ
   xScreen:= xScreen + TextureWidth;
   end;
 
@@ -116,20 +133,20 @@ VirtBitmap.Canvas.TextOut( 10, 50, 'LastBrick=' + inttostr(LastBrick));
 
 end;
 
-//Это деструктор спрайтов игрового пространства
+//Р­С‚Рѕ РґРµСЃС‚СЂСѓРєС‚РѕСЂ СЃРїСЂР°Р№С‚РѕРІ РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР°
 destructor TGameWorld.Destroy;
 var
 i:byte;
 begin
-//Здесь мы удаляем из памяти звёзды
+//Р—РґРµСЃСЊ РјС‹ СѓРґР°Р»СЏРµРј РёР· РїР°РјСЏС‚Рё Р·РІС‘Р·РґС‹
 For i:=0 to length(ImgGameWorld) - 1  Do
    begin
    ImgGameWorld[i].Free;
    //ImgMassStar[i].Canvas.Brush.Color:=clPurple;
    end;
-//Удаляем таймер
-//TimerAnimation.free;
-//Вызов деструктора родительского класса
+//РЈРґР°Р»СЏРµРј С‚Р°Р№РјРµСЂ
+TimerAnimation.free;
+//Р’С‹Р·РѕРІ РґРµСЃС‚СЂСѓРєС‚РѕСЂР° СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ РєР»Р°СЃСЃР°
 inherited;
 end;
 
