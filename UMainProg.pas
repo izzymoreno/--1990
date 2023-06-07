@@ -4,19 +4,19 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ExtCtrls, Math, StdCtrls, UStar, UWorld, UFreddy, USky, uWriteThread, SyncObjs;
+  ExtCtrls, Math, StdCtrls, UStar, UWorld, UTalkoff, USky, uWriteThread, SyncObjs;
 
 Const
-//Основные константы
-//Максимальное количество звёзд
+//РћСЃРЅРѕРІРЅС‹Рµ РєРѕРЅСЃС‚Р°РЅС‚С‹
+//РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р·РІС‘Р·Рґ
 MaxStars = 100;
-//Размер экрана
-xmax = 642;
-ymax = 485;
+//Р Р°Р·РјРµСЂ СЌРєСЂР°РЅР°
+xmax = 1080;
+ymax = 980;
 xmin = 0;
 ymin = 0;
-XScreenMax = 642;
-YScreenMax = 485;
+XScreenMax = 1080;
+YScreenMax = 980;
 
 
 type
@@ -24,16 +24,16 @@ type
     Image1: TImage;
     TimerFPS: TTimer;
     Timer1: TTimer;
-    //Основная процедура, которая создаёт приложение
+    //РћСЃРЅРѕРІРЅР°СЏ РїСЂРѕС†РµРґСѓСЂР°, РєРѕС‚РѕСЂР°СЏ СЃРѕР·РґР°С‘С‚ РїСЂРёР»РѕР¶РµРЅРёРµ
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    //Основной таймер видео
+    //РћСЃРЅРѕРІРЅРѕР№ С‚Р°Р№РјРµСЂ РІРёРґРµРѕ
     procedure TimerFPSTimer(Sender: TObject);
     procedure DrawFrame();
-    //Процедура нажатие на клавишу
+    //РџСЂРѕС†РµРґСѓСЂР° РЅР°Р¶Р°С‚РёРµ РЅР° РєР»Р°РІРёС€Сѓ
     function OverlapRects(R1, R2: TRect): boolean;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    //Процедура отпускания клавиши
+    //РџСЂРѕС†РµРґСѓСЂР° РѕС‚РїСѓСЃРєР°РЅРёСЏ РєР»Р°РІРёС€Рё
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
@@ -45,30 +45,30 @@ type
 var
   //
   Form1: TForm1;
-  //Массив звёзд
+  //РњР°СЃСЃРёРІ Р·РІС‘Р·Рґ
   ExePath: string;
-  //Массив объектов звёзд
+  //РњР°СЃСЃРёРІ РѕР±СЉРµРєС‚РѕРІ Р·РІС‘Р·Рґ
   Stars: array[0..MaxStars - 1] of TMyStar;
-  //Объект Фредди
-  Freddy: TFreddy;
-  //Игровое пространство
+  //РћР±СЉРµРєС‚ РРіРѕСЂСЊ
+  Talkoff: TTalkoff;
+  //РРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ
   GameWorld: TGameWorld;
   GameSky: TGameSky;
-  //объекты потока
+  //РѕР±СЉРµРєС‚С‹ РїРѕС‚РѕРєР°
   WriteThread : TWriteThread;
   CriticalSection: TCriticalSection;
   Tick, FPS: integer;
-  //Список спарайтов Фредди
-  FreddySpritesArrLeft: TList;
-  FreddySpritesArrRight: TList;
-  FreddySpritesArrSitLeft: TList;
-  FreddySpritesArrSitRight: TList;
+  //РЎРїРёСЃРѕРє СЃРїР°СЂР°Р№С‚РѕРІ РРіРѕСЂСЏ
+  TalkoffSpritesArrLeft: TList;
+  TalkoffSpritesArrRight: TList;
+//  TalkoffSpritesArrSitLeft: TList;
+//  TalkoffSpritesArrSitRight: TList;
 
 
-//Заводим виртуальный Canvas
+//Р—Р°РІРѕРґРёРј РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ Canvas
 VirtBitmap: TBitmap;
 
-//Пуск
+//РџСѓСЃРє
 implementation
 
 {$R *.DFM}
@@ -80,44 +80,44 @@ SX,SY:integer;
 begin
 Tick := gettickcount();
 ExePath := ExtractFilePath(Application.ExeName);
-//Заполняем Canvas чёрным цветом
+//Р—Р°РїРѕР»РЅСЏРµРј Canvas С‡С‘СЂРЅС‹Рј С†РІРµС‚РѕРј
 self.TimerFPS.Enabled:=false;
 self.TimerFPS.Interval:=20;
-//Заполняем игровое пространство чёрным цветом
+//Р—Р°РїРѕР»РЅСЏРµРј РёРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ С‡С‘СЂРЅС‹Рј С†РІРµС‚РѕРј
 Form1.Image1.Canvas.Brush.Color:=clBlack;
-//Делаем заливку прямоугольника
+//Р”РµР»Р°РµРј Р·Р°Р»РёРІРєСѓ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°
 Form1.Image1.Canvas.FillRect(Rect(xmin,ymin,XScreenMax,YScreenMax));
-//Размер экрана
+//Р Р°Р·РјРµСЂ СЌРєСЂР°РЅР°
 Form1.Image1.Width:=XScreenMax;
-//Размер экрана
+//Р Р°Р·РјРµСЂ СЌРєСЂР°РЅР°
 Form1.Image1.Height:=YScreenMax;
-//Создаём виртуальный Bitmap
+//РЎРѕР·РґР°С‘Рј РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ Bitmap
 VirtBitmap:=TBitmap.Create;
 VirtBitmap.Width:=Image1.Width;
 VirtBitmap.Height:=Image1.Height;
 VirtBitmap.Canvas.Brush.Color:=clBlack;
 VirtBitmap.Canvas.FillRect(Rect(xmin,ymin,XScreenMax,YScreenMax));
 InitGame();
-//Создаём Звёзды
+//РЎРѕР·РґР°С‘Рј Р—РІС‘Р·РґС‹
 for i := 0 to MaxStars-1 do
    begin
-   //Создаём звёзды и устанавливаем максимальную координату по X и случайную по Y
-//По X
+   //РЎРѕР·РґР°С‘Рј Р·РІС‘Р·РґС‹ Рё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РјР°РєСЃРёРјР°Р»СЊРЅСѓСЋ РєРѕРѕСЂРґРёРЅР°С‚Сѓ РїРѕ X Рё СЃР»СѓС‡Р°Р№РЅСѓСЋ РїРѕ Y
+//РџРѕ X
    SX:=round(Random*xmax);
 //
-   SY:=round(Random*ymax-250);
-//По Y
+   SY:=round(Random*105);
+//РџРѕ Y
    Stars[i]:= TMyStar.CreateStar(SX,SY, 'left', Form1);
    end;
-//Создаём игровое пространство
+//РЎРѕР·РґР°С‘Рј РёРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ
 GameWorld := TGameWorld.CreateGameWorld(Form1);
 GameSky :=  TGameSky.CreateGameSky(Form1);
-//Создаём Фредди
-Freddy := TFreddy.CreateFreddy(305, 310, Form1, FreddySpritesArrLeft, FreddySpritesArrRight,
-                             FreddySpritesArrSitLeft, FreddySpritesArrSitRight);
-//Включаем таймер отрисовки
+//РЎРѕР·РґР°С‘Рј РРіРѕСЂСЏ
+Talkoff := TTalkoff.CreateTalkoff(305, 505, Form1, TalkoffSpritesArrLeft, TalkoffSpritesArrRight
+                             {TalkoffSpritesArrSitLeft, TalkoffSpritesArrSitRight});
+//Р’РєР»СЋС‡Р°РµРј С‚Р°Р№РјРµСЂ РѕС‚СЂРёСЃРѕРІРєРё
 self.TimerFPS.Enabled:=true;
-//выводим через поток
+//РІС‹РІРѕРґРёРј С‡РµСЂРµР· РїРѕС‚РѕРє
 WriteThread := TWriteThread.Create(False);
 CriticalSection := TCriticalSection.Create;
 WriteThread.Priority := tpNormal;//Highest;//tpHighest;
@@ -131,30 +131,30 @@ var
 i:integer;
 tmpBitmap: TBitmap;
 begin
-//Загружаем в спрайты Фредди смотрящего влево
-FreddySpritesArrLeft := TList.Create;
-For i:=0 to MaxImgFreddyMoveLeft - 1 Do
+//Р—Р°РіСЂСѓР¶Р°РµРј РІ СЃРїСЂР°Р№С‚С‹ РРіРѕСЂСЏ СЃРјРѕС‚СЂСЏС‰РµРіРѕ РІР»РµРІРѕ
+TalkoffSpritesArrLeft := TList.Create;
+For i:=0 to MaxImgTalkoffMoveLeft - 1 Do
    begin
    tmpBitmap :=TBitMap.Create;
-   tmpBitmap.LoadFromFile(ExePath+'Graphics\Freddy\FreddyMoveLeft\Freddy'+IntToStr(i)+'.bmp');
+   tmpBitmap.LoadFromFile(ExePath+'Graphics\Talkoff\TalkoffMoveLeft\moving_tallf'+IntToStr(i)+'.bmp');
    tmpBitmap.Transparent:=True;
    tmpBitmap.TransparentMode:=tmFixed;
    tmpBitmap.TransparentColor:=clBlack;
-   FreddySpritesArrLeft.Add(tmpBitmap);
+   TalkoffSpritesArrLeft.Add(tmpBitmap);
    end;
-//Загружаем в спрайты Фредди смотрящего вправо
-FreddySpritesArrRight := TList.Create;
-For i:=0 to MaxImgFreddyMoveRight - 1 Do
+//Р—Р°РіСЂСѓР¶Р°РµРј РІ СЃРїСЂР°Р№С‚С‹ РРіРѕСЂСЏ СЃРјРѕС‚СЂСЏС‰РµРіРѕ РІРїСЂР°РІРѕ
+TalkoffSpritesArrRight := TList.Create;
+For i:=0 to MaxImgTalkoffMoveRight - 1 Do
    begin
    tmpBitmap :=TBitMap.Create;
-   tmpBitmap.LoadFromFile(ExePath+'Graphics\Freddy\FreddyMoveRight\Freddy'+IntToStr(i)+'.bmp');
+   tmpBitmap.LoadFromFile(ExePath+'Graphics\Talkoff\TalkoffMoveRight\moving_tallf'+IntToStr(i)+'.bmp');
    tmpBitmap.Transparent:=True;
    tmpBitmap.TransparentMode:=tmFixed;
    tmpBitmap.TransparentColor:=clBlack;
-   FreddySpritesArrRight.Add(tmpBitmap);
+   TalkoffSpritesArrRight.Add(tmpBitmap);
    end;
-//Загружаем в спрайты Фредди сидящего влево
-FreddySpritesArrSitLeft := TList.Create;
+//Р—Р°РіСЂСѓР¶Р°РµРј РІ СЃРїСЂР°Р№С‚С‹ Р¤СЂРµРґРґРё СЃРёРґСЏС‰РµРіРѕ РІР»РµРІРѕ
+{FreddySpritesArrSitLeft := TList.Create;
 For i:=0 to MaxImgFreddyMoveSitLeft - 1 Do
    begin
    tmpBitmap :=TBitMap.Create;
@@ -164,7 +164,7 @@ For i:=0 to MaxImgFreddyMoveSitLeft - 1 Do
    tmpBitmap.TransparentColor:=clBlack;
    FreddySpritesArrSitLeft.Add(tmpBitmap);
    end;
-//Загружаем в спрайты Фредди сидящего вправо
+//Р—Р°РіСЂСѓР¶Р°РµРј РІ СЃРїСЂР°Р№С‚С‹ Р¤СЂРµРґРґРё СЃРёРґСЏС‰РµРіРѕ РІРїСЂР°РІРѕ
 FreddySpritesArrSitRight := TList.Create;
 For i:=0 to MaxImgFreddyMoveSitRight - 1 Do
    begin
@@ -174,7 +174,7 @@ For i:=0 to MaxImgFreddyMoveSitRight - 1 Do
    tmpBitmap.TransparentMode:=tmFixed;
    tmpBitmap.TransparentColor:=clBlack;
    FreddySpritesArrSitRight.Add(tmpBitmap);
-   end;
+   end;}
 end;
 
 function TForm1.OverlapRects(R1, R2: TRect): Boolean;
@@ -193,19 +193,19 @@ procedure TForm1.FormDestroy(Sender: TObject);
 var
 i:integer;
 begin
-//Выключаем таймер отрисовки
+//Р’С‹РєР»СЋС‡Р°РµРј С‚Р°Р№РјРµСЂ РѕС‚СЂРёСЃРѕРІРєРё
 self.TimerFPS.Enabled:=false;
-//Удаляем из памяти массив звёзд
+//РЈРґР°Р»СЏРµРј РёР· РїР°РјСЏС‚Рё РјР°СЃСЃРёРІ Р·РІС‘Р·Рґ
 for i := 0 to MaxStars-1 do
    begin
    Stars[i].free;
    end;
-//Удаляем из памяти игровое пространство
+//РЈРґР°Р»СЏРµРј РёР· РїР°РјСЏС‚Рё РёРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ
 GameWorld.Free;
 GameSky.Free;
-//Удаляем из памяти Фредди
-Freddy.Free;
-//Удаляем из памяти виртуальный Canvas
+//РЈРґР°Р»СЏРµРј РёР· РїР°РјСЏС‚Рё РРіРѕСЂСЏ
+Talkoff.Free;
+//РЈРґР°Р»СЏРµРј РёР· РїР°РјСЏС‚Рё РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ Canvas
 VirtBitmap.Free;
 WriteThread.Terminate;
 CriticalSection.free;
@@ -219,51 +219,51 @@ begin
    case key of
    vk_left:
          begin
-//Скроллируем игровое пространство на шаг влево
-         If Freddy.FreddySit = false then
+//РЎРєСЂРѕР»Р»РёСЂСѓРµРј РёРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ РЅР° С€Р°Рі РІР»РµРІРѕ
+//         If Talkoff.TalkoffSit = false then
            begin
            GameWorld.WorldX := GameWorld.WorldX - 3;
            GameSky.SkyX := GameSky.SkyX - 1;
            end;
-//Анимация Фредди
-         Freddy.sprindexshag := 1;
-//Устанавливаем шаг
-         Freddy.shagx := -1;
-//Фредди разворачивается влево
-         Freddy.ThereMove := FreddydirectionLeft;
+//РђРЅРёРјР°С†РёСЏ РРіРѕСЂСЏ
+         Talkoff.sprindexshag := 1;
+//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј С€Р°Рі
+         Talkoff.shagx := -1;
+//РРіРѕСЂСЊ СЂР°Р·РІРѕСЂР°С‡РёРІР°РµС‚СЃСЏ РІР»РµРІРѕ
+         Talkoff.ThereMove := TalkoffdirectionLeft;
          end;
    vk_right:
          begin
-//Скроллируем игровое пространство на шаг вправо
-         If Freddy.FreddySit = false then
+//РЎРєСЂРѕР»Р»РёСЂСѓРµРј РёРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ РЅР° С€Р°Рі РІРїСЂР°РІРѕ
+//         If Talkoff.TalkoffSit = false then
            begin
            GameWorld.WorldX := GameWorld.WorldX + 3;
            GameSky.SkyX := GameSky.SkyX + 1;
            end;
-//Анимация Фредди
-         Freddy.sprindexshag := 1;
-//Устанавливаем шаг
-         Freddy.shagx := 1;
-//Фредди разворачивается вправо
-         Freddy.ThereMove := FreddydirectionRight;
+//РђРЅРёРјР°С†РёСЏ РРіРѕСЂСЏ
+         Talkoff.sprindexshag := 1;
+//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј С€Р°Рі
+         Talkoff.shagx := 1;
+//РРіРѕСЂСЊ СЂР°Р·РІРѕСЂР°С‡РёРІР°РµС‚СЃСЏ РІРїСЂР°РІРѕ
+         Talkoff.ThereMove := TalkoffdirectionRight;
          end;
    vk_down:
            begin
-           Freddy.FreddySit := true;
-           Freddy.sprindexshag := 0;
+//           Talkoff.TalkoffSit := true;
+//           Talkoff.sprindexshag := 0;
            end;
    vk_up:
         begin
-        Freddy.FreddySit := false;
-        Freddy.sprindexshag := 0;
+//        Talkoff.TalkoffSit := false;
+        Talkoff.sprindexshag := 0;
         end;
      end;
 end;
 
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-//Фредди останавливается
-Freddy.sprindexshag := 0;
+//РРіРѕСЂСЊ РѕСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ
+Talkoff.sprindexshag := 0;
 end;
 
 procedure TForm1.TimerFPSTimer(Sender: TObject);
@@ -285,16 +285,16 @@ if (Tick + 1000) < gettickcount() then
     end;
   end;
 
-//Перерисовываем Canvas
+//РџРµСЂРµСЂРёСЃРѕРІС‹РІР°РµРј Canvas
 VirtBitmap.Canvas.FillRect(Rect(0,0,VirtBitmap.Width,VirtBitmap.Height));
-//Выводим игровое пространство
+//Р’С‹РІРѕРґРёРј РёРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ
 GameWorld.Show;
-//Выводим небо
+//Р’С‹РІРѕРґРёРј РЅРµР±Рѕ
 GameSky.Show;
-//Выводим Фредди
-Freddy.Show;
-//Каждый объект отрисовываем на виртуальный канвас
-//Звёзды
+//Р’С‹РІРѕРґРёРј РРіРѕСЂСЏ
+Talkoff.Show;
+//РљР°Р¶РґС‹Р№ РѕР±СЉРµРєС‚ РѕС‚СЂРёСЃРѕРІС‹РІР°РµРј РЅР° РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РєР°РЅРІР°СЃ
+//Р—РІС‘Р·РґС‹
 for i := 0 to MaxStars - 1 do
    begin
    If Stars[i] <> nil then
@@ -304,9 +304,10 @@ for i := 0 to MaxStars - 1 do
    end;
 
 VirtBitmap.Canvas.TextOut(10, 100, 'FPS=' + inttostr(FPS));
-//Копируем виртуальный канвас
+//РљРѕРїРёСЂСѓРµРј РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РєР°РЅРІР°СЃ
 Form1.Image1.Canvas.Draw(10, 10, VirtBitmap);
 application.ProcessMessages;
 end;
 
 end.
+
