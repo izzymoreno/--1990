@@ -7,10 +7,10 @@ uses
   ExtCtrls, Math, StdCtrls, UStar, UWorld, UTalkoff, USky, uWriteThread, SyncObjs;
 
 Const
-//РћСЃРЅРѕРІРЅС‹Рµ РєРѕРЅСЃС‚Р°РЅС‚С‹
-//РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р·РІС‘Р·Рґ
+//Основные константы
+//Максимальное количество звёзд
 MaxStars = 100;
-//Р Р°Р·РјРµСЂ СЌРєСЂР°РЅР°
+//Размер экрана
 xmax = 1080;
 ymax = 980;
 xmin = 0;
@@ -24,16 +24,16 @@ type
     Image1: TImage;
     TimerFPS: TTimer;
     Timer1: TTimer;
-    //РћСЃРЅРѕРІРЅР°СЏ РїСЂРѕС†РµРґСѓСЂР°, РєРѕС‚РѕСЂР°СЏ СЃРѕР·РґР°С‘С‚ РїСЂРёР»РѕР¶РµРЅРёРµ
+    //Основная процедура, которая создаёт приложение
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    //РћСЃРЅРѕРІРЅРѕР№ С‚Р°Р№РјРµСЂ РІРёРґРµРѕ
+    //Основной таймер видео
     procedure TimerFPSTimer(Sender: TObject);
     procedure DrawFrame();
-    //РџСЂРѕС†РµРґСѓСЂР° РЅР°Р¶Р°С‚РёРµ РЅР° РєР»Р°РІРёС€Сѓ
+    //Процедура нажатие на клавишу
     function OverlapRects(R1, R2: TRect): boolean;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    //РџСЂРѕС†РµРґСѓСЂР° РѕС‚РїСѓСЃРєР°РЅРёСЏ РєР»Р°РІРёС€Рё
+    //Процедура отпускания клавиши
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
@@ -45,30 +45,30 @@ type
 var
   //
   Form1: TForm1;
-  //РњР°СЃСЃРёРІ Р·РІС‘Р·Рґ
+  //Массив звёзд
   ExePath: string;
-  //РњР°СЃСЃРёРІ РѕР±СЉРµРєС‚РѕРІ Р·РІС‘Р·Рґ
+  //Массив объектов звёзд
   Stars: array[0..MaxStars - 1] of TMyStar;
-  //РћР±СЉРµРєС‚ РРіРѕСЂСЊ
+  //Объект Игорь
   Talkoff: TTalkoff;
-  //РРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ
+  //Игровое пространство
   GameWorld: TGameWorld;
   GameSky: TGameSky;
-  //РѕР±СЉРµРєС‚С‹ РїРѕС‚РѕРєР°
+  //объекты потока
   WriteThread : TWriteThread;
   CriticalSection: TCriticalSection;
   Tick, FPS: integer;
-  //РЎРїРёСЃРѕРє СЃРїР°СЂР°Р№С‚РѕРІ РРіРѕСЂСЏ
+  //Список спарайтов Игоря
   TalkoffSpritesArrLeft: TList;
   TalkoffSpritesArrRight: TList;
 //  TalkoffSpritesArrSitLeft: TList;
 //  TalkoffSpritesArrSitRight: TList;
 
 
-//Р—Р°РІРѕРґРёРј РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ Canvas
+//Заводим виртуальный Canvas
 VirtBitmap: TBitmap;
 
-//РџСѓСЃРє
+//Пуск
 implementation
 
 {$R *.DFM}
@@ -80,44 +80,44 @@ SX,SY:integer;
 begin
 Tick := gettickcount();
 ExePath := ExtractFilePath(Application.ExeName);
-//Р—Р°РїРѕР»РЅСЏРµРј Canvas С‡С‘СЂРЅС‹Рј С†РІРµС‚РѕРј
+//Заполняем Canvas чёрным цветом
 self.TimerFPS.Enabled:=false;
 self.TimerFPS.Interval:=20;
-//Р—Р°РїРѕР»РЅСЏРµРј РёРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ С‡С‘СЂРЅС‹Рј С†РІРµС‚РѕРј
+//Заполняем игровое пространство чёрным цветом
 Form1.Image1.Canvas.Brush.Color:=clBlack;
-//Р”РµР»Р°РµРј Р·Р°Р»РёРІРєСѓ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°
+//Делаем заливку прямоугольника
 Form1.Image1.Canvas.FillRect(Rect(xmin,ymin,XScreenMax,YScreenMax));
-//Р Р°Р·РјРµСЂ СЌРєСЂР°РЅР°
+//Размер экрана
 Form1.Image1.Width:=XScreenMax;
-//Р Р°Р·РјРµСЂ СЌРєСЂР°РЅР°
+//Размер экрана
 Form1.Image1.Height:=YScreenMax;
-//РЎРѕР·РґР°С‘Рј РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ Bitmap
+//Создаём виртуальный Bitmap
 VirtBitmap:=TBitmap.Create;
 VirtBitmap.Width:=Image1.Width;
 VirtBitmap.Height:=Image1.Height;
 VirtBitmap.Canvas.Brush.Color:=clBlack;
 VirtBitmap.Canvas.FillRect(Rect(xmin,ymin,XScreenMax,YScreenMax));
 InitGame();
-//РЎРѕР·РґР°С‘Рј Р—РІС‘Р·РґС‹
+//Создаём Звёзды
 for i := 0 to MaxStars-1 do
    begin
-   //РЎРѕР·РґР°С‘Рј Р·РІС‘Р·РґС‹ Рё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РјР°РєСЃРёРјР°Р»СЊРЅСѓСЋ РєРѕРѕСЂРґРёРЅР°С‚Сѓ РїРѕ X Рё СЃР»СѓС‡Р°Р№РЅСѓСЋ РїРѕ Y
-//РџРѕ X
+   //Создаём звёзды и устанавливаем максимальную координату по X и случайную по Y
+//По X
    SX:=round(Random*xmax);
 //
    SY:=round(Random*105);
-//РџРѕ Y
+//По Y
    Stars[i]:= TMyStar.CreateStar(SX,SY, 'left', Form1);
    end;
-//РЎРѕР·РґР°С‘Рј РёРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ
+//Создаём игровое пространство
 GameWorld := TGameWorld.CreateGameWorld(Form1);
 GameSky :=  TGameSky.CreateGameSky(Form1);
-//РЎРѕР·РґР°С‘Рј РРіРѕСЂСЏ
+//Создаём Игоря
 Talkoff := TTalkoff.CreateTalkoff(305, 505, Form1, TalkoffSpritesArrLeft, TalkoffSpritesArrRight
                              {TalkoffSpritesArrSitLeft, TalkoffSpritesArrSitRight});
-//Р’РєР»СЋС‡Р°РµРј С‚Р°Р№РјРµСЂ РѕС‚СЂРёСЃРѕРІРєРё
+//Включаем таймер отрисовки
 self.TimerFPS.Enabled:=true;
-//РІС‹РІРѕРґРёРј С‡РµСЂРµР· РїРѕС‚РѕРє
+//выводим через поток
 WriteThread := TWriteThread.Create(False);
 CriticalSection := TCriticalSection.Create;
 WriteThread.Priority := tpNormal;//Highest;//tpHighest;
@@ -131,7 +131,7 @@ var
 i:integer;
 tmpBitmap: TBitmap;
 begin
-//Р—Р°РіСЂСѓР¶Р°РµРј РІ СЃРїСЂР°Р№С‚С‹ РРіРѕСЂСЏ СЃРјРѕС‚СЂСЏС‰РµРіРѕ РІР»РµРІРѕ
+//Загружаем в спрайты Игоря смотрящего влево
 TalkoffSpritesArrLeft := TList.Create;
 For i:=0 to MaxImgTalkoffMoveLeft - 1 Do
    begin
@@ -142,7 +142,7 @@ For i:=0 to MaxImgTalkoffMoveLeft - 1 Do
    tmpBitmap.TransparentColor:=clBlack;
    TalkoffSpritesArrLeft.Add(tmpBitmap);
    end;
-//Р—Р°РіСЂСѓР¶Р°РµРј РІ СЃРїСЂР°Р№С‚С‹ РРіРѕСЂСЏ СЃРјРѕС‚СЂСЏС‰РµРіРѕ РІРїСЂР°РІРѕ
+//Загружаем в спрайты Игоря смотрящего вправо
 TalkoffSpritesArrRight := TList.Create;
 For i:=0 to MaxImgTalkoffMoveRight - 1 Do
    begin
@@ -153,7 +153,7 @@ For i:=0 to MaxImgTalkoffMoveRight - 1 Do
    tmpBitmap.TransparentColor:=clBlack;
    TalkoffSpritesArrRight.Add(tmpBitmap);
    end;
-//Р—Р°РіСЂСѓР¶Р°РµРј РІ СЃРїСЂР°Р№С‚С‹ Р¤СЂРµРґРґРё СЃРёРґСЏС‰РµРіРѕ РІР»РµРІРѕ
+//Загружаем в спрайты Фредди сидящего влево
 {FreddySpritesArrSitLeft := TList.Create;
 For i:=0 to MaxImgFreddyMoveSitLeft - 1 Do
    begin
@@ -164,7 +164,7 @@ For i:=0 to MaxImgFreddyMoveSitLeft - 1 Do
    tmpBitmap.TransparentColor:=clBlack;
    FreddySpritesArrSitLeft.Add(tmpBitmap);
    end;
-//Р—Р°РіСЂСѓР¶Р°РµРј РІ СЃРїСЂР°Р№С‚С‹ Р¤СЂРµРґРґРё СЃРёРґСЏС‰РµРіРѕ РІРїСЂР°РІРѕ
+//Загружаем в спрайты Фредди сидящего вправо
 FreddySpritesArrSitRight := TList.Create;
 For i:=0 to MaxImgFreddyMoveSitRight - 1 Do
    begin
@@ -193,19 +193,19 @@ procedure TForm1.FormDestroy(Sender: TObject);
 var
 i:integer;
 begin
-//Р’С‹РєР»СЋС‡Р°РµРј С‚Р°Р№РјРµСЂ РѕС‚СЂРёСЃРѕРІРєРё
+//Выключаем таймер отрисовки
 self.TimerFPS.Enabled:=false;
-//РЈРґР°Р»СЏРµРј РёР· РїР°РјСЏС‚Рё РјР°СЃСЃРёРІ Р·РІС‘Р·Рґ
+//Удаляем из памяти массив звёзд
 for i := 0 to MaxStars-1 do
    begin
    Stars[i].free;
    end;
-//РЈРґР°Р»СЏРµРј РёР· РїР°РјСЏС‚Рё РёРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ
+//Удаляем из памяти игровое пространство
 GameWorld.Free;
 GameSky.Free;
-//РЈРґР°Р»СЏРµРј РёР· РїР°РјСЏС‚Рё РРіРѕСЂСЏ
+//Удаляем из памяти Игоря
 Talkoff.Free;
-//РЈРґР°Р»СЏРµРј РёР· РїР°РјСЏС‚Рё РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ Canvas
+//Удаляем из памяти виртуальный Canvas
 VirtBitmap.Free;
 WriteThread.Terminate;
 CriticalSection.free;
@@ -219,32 +219,32 @@ begin
    case key of
    vk_left:
          begin
-//РЎРєСЂРѕР»Р»РёСЂСѓРµРј РёРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ РЅР° С€Р°Рі РІР»РµРІРѕ
+//Скроллируем игровое пространство на шаг влево
 //         If Talkoff.TalkoffSit = false then
            begin
            GameWorld.WorldX := GameWorld.WorldX - 3;
            GameSky.SkyX := GameSky.SkyX - 1;
            end;
-//РђРЅРёРјР°С†РёСЏ РРіРѕСЂСЏ
+//Анимация Игоря
          Talkoff.sprindexshag := 1;
-//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј С€Р°Рі
+//Устанавливаем шаг
          Talkoff.shagx := -1;
-//РРіРѕСЂСЊ СЂР°Р·РІРѕСЂР°С‡РёРІР°РµС‚СЃСЏ РІР»РµРІРѕ
+//Игорь разворачивается влево
          Talkoff.ThereMove := TalkoffdirectionLeft;
          end;
    vk_right:
          begin
-//РЎРєСЂРѕР»Р»РёСЂСѓРµРј РёРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ РЅР° С€Р°Рі РІРїСЂР°РІРѕ
+//Скроллируем игровое пространство на шаг вправо
 //         If Talkoff.TalkoffSit = false then
            begin
            GameWorld.WorldX := GameWorld.WorldX + 3;
            GameSky.SkyX := GameSky.SkyX + 1;
            end;
-//РђРЅРёРјР°С†РёСЏ РРіРѕСЂСЏ
+//Анимация Игоря
          Talkoff.sprindexshag := 1;
-//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј С€Р°Рі
+//Устанавливаем шаг
          Talkoff.shagx := 1;
-//РРіРѕСЂСЊ СЂР°Р·РІРѕСЂР°С‡РёРІР°РµС‚СЃСЏ РІРїСЂР°РІРѕ
+//Игорь разворачивается вправо
          Talkoff.ThereMove := TalkoffdirectionRight;
          end;
    vk_down:
@@ -262,7 +262,7 @@ end;
 
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-//РРіРѕСЂСЊ РѕСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ
+//Игорь останавливается
 Talkoff.sprindexshag := 0;
 end;
 
@@ -285,16 +285,16 @@ if (Tick + 1000) < gettickcount() then
     end;
   end;
 
-//РџРµСЂРµСЂРёСЃРѕРІС‹РІР°РµРј Canvas
+//Перерисовываем Canvas
 VirtBitmap.Canvas.FillRect(Rect(0,0,VirtBitmap.Width,VirtBitmap.Height));
-//Р’С‹РІРѕРґРёРј РёРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ
+//Выводим игровое пространство
 GameWorld.Show;
-//Р’С‹РІРѕРґРёРј РЅРµР±Рѕ
+//Выводим небо
 GameSky.Show;
-//Р’С‹РІРѕРґРёРј РРіРѕСЂСЏ
+//Выводим Игоря
 Talkoff.Show;
-//РљР°Р¶РґС‹Р№ РѕР±СЉРµРєС‚ РѕС‚СЂРёСЃРѕРІС‹РІР°РµРј РЅР° РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РєР°РЅРІР°СЃ
-//Р—РІС‘Р·РґС‹
+//Каждый объект отрисовываем на виртуальный канвас
+//Звёзды
 for i := 0 to MaxStars - 1 do
    begin
    If Stars[i] <> nil then
@@ -304,10 +304,9 @@ for i := 0 to MaxStars - 1 do
    end;
 
 VirtBitmap.Canvas.TextOut(10, 100, 'FPS=' + inttostr(FPS));
-//РљРѕРїРёСЂСѓРµРј РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РєР°РЅРІР°СЃ
+//Копируем виртуальный канвас
 Form1.Image1.Canvas.Draw(10, 10, VirtBitmap);
 application.ProcessMessages;
 end;
 
 end.
-
