@@ -7,7 +7,7 @@ uses
 
 Const
 
-//Максимальное значение спрайтов Игоря движения влево и вправо соответственно
+//РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРїСЂР°Р№С‚РѕРІ РРіРѕСЂСЏ РґРІРёР¶РµРЅРёСЏ РІР»РµРІРѕ Рё РІРїСЂР°РІРѕ СЃРѕРѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕ
 MaxImageTalkoff = 3;
 MaxImgTalkoffMoveLeft = 3;
 MaxImgTalkoffMoveRight = 3;
@@ -39,7 +39,7 @@ type
   XTalkoff,YTalkoff,sprindex:integer;
 //  FreddySit: boolean;
 
-//Маркер направления Игоря
+//РњР°СЂРєРµСЂ РЅР°РїСЂР°РІР»РµРЅРёСЏ РРіРѕСЂСЏ
   ThereMove: TTalkoffDirection;
   TimerAnimation: TTimer;
   procedure Show;
@@ -64,20 +64,20 @@ self.TimerAnimation:=TTimer.Create(nil);
 self.TimerAnimation.OnTimer:=self.TimerAnimationProcessing;
 self.TimerAnimation.Interval:=round(145);
 //self.TimTimerAnimation.Interval:=round((Random*120)+(Random*60)+1);
-//Максимальная координата по X для мухи, чтобы она развернулась
+//РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° РїРѕ X РґР»СЏ РјСѓС…Рё, С‡С‚РѕР±С‹ РѕРЅР° СЂР°Р·РІРµСЂРЅСѓР»Р°СЃСЊ
 ThereMove := TalkoffdirectionRight;
 XTalkoff:=X;
 YTalkoff:=Y;
 //self.grad:=0;
 self.owner:=ownerForm;
-//Загружаем все спрайты Игоря
+//Р—Р°РіСЂСѓР¶Р°РµРј РІСЃРµ СЃРїСЂР°Р№С‚С‹ РРіРѕСЂСЏ
 
 ImgMassTalkoffMoveLeft := pTalkoffSpritesLeft;
 ImgMassTalkoffMoveRight := pTalkoffSpritesRight;
 //ImgMassTalkoffMoveSitLeft := pTalkoffSpritesMoveSitLeft;
 //ImgMassTalkoffMoveSitRight := pTalkoffSpritesMoveSitRight;
 
-//Заводим переменные для анимации Игоря
+//Р—Р°РІРѕРґРёРј РїРµСЂРµРјРµРЅРЅС‹Рµ РґР»СЏ Р°РЅРёРјР°С†РёРё РРіРѕСЂСЏ
 //TalkoffSit := false;
 shagx:=0;
 shagy:=0;
@@ -85,22 +85,22 @@ sprleftindex := 0;
 sprrightindex := 0;
 sprindexshag := 0;
 //ThereMove:=OwldirectionCenter;
-//Включаем таймер анимации Игоря
+//Р’РєР»СЋС‡Р°РµРј С‚Р°Р№РјРµСЂ Р°РЅРёРјР°С†РёРё РРіРѕСЂСЏ
 self.TimerAnimation.Enabled:=true;
 end;
 
 procedure TTalkoff.TimerAnimationProcessing(Sender: TObject);
 begin
-//Игорь идёт влево
-//Здесь мы изменяем номер спрайта
-//Игорь идёт влево
+//РРіРѕСЂСЊ РёРґС‘С‚ РІР»РµРІРѕ
+//Р—РґРµСЃСЊ РјС‹ РёР·РјРµРЅСЏРµРј РЅРѕРјРµСЂ СЃРїСЂР°Р№С‚Р°
+//РРіРѕСЂСЊ РёРґС‘С‚ РІР»РµРІРѕ
 If (ThereMove = TalkoffdirectionLeft) then
   begin
    sprleftindex := sprleftindex + sprindexshag;
    if sprleftindex >= MaxImgTalkoffMoveLeft then
       sprleftindex := 0;
    end;
-//Игорь идёт вправо
+//РРіРѕСЂСЊ РёРґС‘С‚ РІРїСЂР°РІРѕ
 If (ThereMove = TalkoffdirectionRight) then
    begin
    sprrightindex := sprrightindex + sprindexshag;
@@ -114,7 +114,7 @@ begin
 
 //Gravity;
 
-//Отрисовываем Игоря
+//РћС‚СЂРёСЃРѕРІС‹РІР°РµРј РРіРѕСЂСЏ
    If (ThereMove = TalkoffdirectionLeft) then
      begin
      VirtBitmap.Canvas.Draw(self.XTalkoff, self.YTalkoff, self.ImgMassTalkoffMoveLeft.Items[sprleftindex]);
@@ -161,18 +161,18 @@ sprindex: byte;
 FirstBrick: integer;
 LastBrick : integer;
 begin
-//Берём в цикле перечсляем все спрайты земли и сравниваем прямоугольник спрайта земли с прямоугольником Фредди.
-//Проверяем, если под ногами Фредди грунт
+//Р‘РµСЂС‘Рј РІ С†РёРєР»Рµ РїРµСЂРµС‡СЃР»СЏРµРј РІСЃРµ СЃРїСЂР°Р№С‚С‹ Р·РµРјР»Рё Рё СЃСЂР°РІРЅРёРІР°РµРј РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє СЃРїСЂР°Р№С‚Р° Р·РµРјР»Рё СЃ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєРѕРј Р¤СЂРµРґРґРё.
+//РџСЂРѕРІРµСЂСЏРµРј, РµСЃР»Рё РїРѕРґ РЅРѕРіР°РјРё Р¤СЂРµРґРґРё РіСЂСѓРЅС‚
 for i := FirstBrick to LastBrick do
   begin
-   //Читаем из массива игрового пространства номер спрайта
+   //Р§РёС‚Р°РµРј РёР· РјР°СЃСЃРёРІР° РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР° РЅРѕРјРµСЂ СЃРїСЂР°Р№С‚Р°
   sprindex := GameWorld.GameWorldArr[i];
-  //Необходимо пересчитать Xscreen в координаты виртуального экрана.
+  //РќРµРѕР±С…РѕРґРёРјРѕ РїРµСЂРµСЃС‡РёС‚Р°С‚СЊ Xscreen РІ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРёСЂС‚СѓР°Р»СЊРЅРѕРіРѕ СЌРєСЂР°РЅР°.
 
   Form1.OverlapRects(R1, R2: TRect): Boolean;
 
   //VirtBitmap.Canvas.Draw(xScreen, GameWorld.WorldY, GameWorld.ImgGameWorld[sprindex]);
-  // Прибавляем 10. 10 - размер спрайтов по 10 пикселей, учтём это
+  // РџСЂРёР±Р°РІР»СЏРµРј 10. 10 - СЂР°Р·РјРµСЂ СЃРїСЂР°Р№С‚РѕРІ РїРѕ 10 РїРёРєСЃРµР»РµР№, СѓС‡С‚С‘Рј СЌС‚Рѕ
   xScreen:= xScreen + TextureWidth;
   end;
 
@@ -182,36 +182,38 @@ if YFreddy<= 310 then
   end;
 end;}
 
-//Это деструктор Игоря
+//Р­С‚Рѕ РґРµСЃС‚СЂСѓРєС‚РѕСЂ РРіРѕСЂСЏ
 destructor TTalkoff.Destroy;
 var
 i:byte;
 begin
-//Здесь мы удаляем из памяти Фредди
+//Р—РґРµСЃСЊ РјС‹ СѓРґР°Р»СЏРµРј РёР· РїР°РјСЏС‚Рё Р¤СЂРµРґРґРё
 {For i:=0 to  MaxImgFreddyMoveLeft-1 Do
    begin
-   //Если объект существует в памяти, то мы его удаляем
+   //Р•СЃР»Рё РѕР±СЉРµРєС‚ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ РїР°РјСЏС‚Рё, С‚Рѕ РјС‹ РµРіРѕ СѓРґР°Р»СЏРµРј
    if ImgMassFreddyMoveLeft[i]<>nil then ImgMassFreddyMoveLeft[i].free;
    end;
 For i:=0 to  MaxImgFreddyMoveRight-1 Do
    begin
-   //Если объект существует в памяти, то мы его удаляем
+   //Р•СЃР»Рё РѕР±СЉРµРєС‚ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ РїР°РјСЏС‚Рё, С‚Рѕ РјС‹ РµРіРѕ СѓРґР°Р»СЏРµРј
    if ImgMassFreddyMoveRight[i]<>nil then ImgMassFreddyMoveRight[i].free;
    end;
 For i:=0 to  MaxImgFreddyMoveSitLeft-1 Do
    begin
-   //Если объект существует в памяти, то мы его удаляем
+   //Р•СЃР»Рё РѕР±СЉРµРєС‚ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ РїР°РјСЏС‚Рё, С‚Рѕ РјС‹ РµРіРѕ СѓРґР°Р»СЏРµРј
    if ImgMassFreddyMoveSitLeft[i]<>nil then ImgMassFreddyMoveSitLeft[i].free;
    end;
 For i:=0 to  MaxImgFreddyMoveSitRight-1 Do
    begin
-   //Если объект существует в памяти, то мы его удаляем
+   //Р•СЃР»Рё РѕР±СЉРµРєС‚ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ РїР°РјСЏС‚Рё, С‚Рѕ РјС‹ РµРіРѕ СѓРґР°Р»СЏРµРј
    if ImgMassFreddyMoveSitRight[i]<>nil then ImgMassFreddyMoveSitRight[i].free;
    end;}
-//Удаляем таймер анимации
+//РЈРґР°Р»СЏРµРј С‚Р°Р№РјРµСЂ Р°РЅРёРјР°С†РёРё
 TimerAnimation.free;
-//Вызов деструктора родительского класса
+//Р’С‹Р·РѕРІ РґРµСЃС‚СЂСѓРєС‚РѕСЂР° СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ РєР»Р°СЃСЃР°
 inherited;
 end;
+
+end.
 
 end.
