@@ -2,6 +2,7 @@ unit UMainProg;
 
 interface
 
+//Здесь подключаются основные модули и модули, которые создал программист
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   ExtCtrls, Math, StdCtrls, UStar, UWorld, UTalkoff, USky, uWriteThread, SyncObjs;
@@ -22,6 +23,8 @@ YScreenMax = 980;
 type
   TForm1 = class(TForm)
     Image1: TImage;
+
+//Таймер кадровой развёртки
     TimerFPS: TTimer;
     Timer1: TTimer;
     //Основная процедура, которая создаёт приложение
@@ -43,26 +46,29 @@ type
   end;
 
 var
-  //
+  //Основной экран игрового пространства
   Form1: TForm1;
-  //Массив звёзд
+  //Выясняем путь к exe-файлу
   ExePath: string;
+  //Массив звёзд
   //Массив объектов звёзд
   Stars: array[0..MaxStars - 1] of TMyStar;
   //Объект Игорь
   Talkoff: TTalkoff;
   //Игровое пространство
+  //Мир
   GameWorld: TGameWorld;
+  //Небо
   GameSky: TGameSky;
   //объекты потока
   WriteThread : TWriteThread;
   CriticalSection: TCriticalSection;
   Tick, FPS: integer;
-  //Список спарайтов Игоря
+  //Список спрайтов Игоря
   TalkoffSpritesArrLeft: TList;
   TalkoffSpritesArrRight: TList;
-//  TalkoffSpritesArrSitLeft: TList;
-//  TalkoffSpritesArrSitRight: TList;
+  TalkoffSpritesArrKickFistLeft: TList;
+  TalkoffSpritesArrKickFistRight: TList;
 
 
 //Заводим виртуальный Canvas
@@ -81,6 +87,7 @@ begin
 Tick := gettickcount();
 ExePath := ExtractFilePath(Application.ExeName);
 //Заполняем Canvas чёрным цветом
+//Включаем таймер развёртки
 self.TimerFPS.Enabled:=false;
 self.TimerFPS.Interval:=20;
 //Заполняем игровое пространство чёрным цветом
@@ -110,11 +117,15 @@ for i := 0 to MaxStars-1 do
    Stars[i]:= TMyStar.CreateStar(SX,SY, 'left', Form1);
    end;
 //Создаём игровое пространство
+//Мир
 GameWorld := TGameWorld.CreateGameWorld(Form1);
+//Небо
 GameSky :=  TGameSky.CreateGameSky(Form1);
-//Создаём Игоря
-Talkoff := TTalkoff.CreateTalkoff(305, 505, Form1, TalkoffSpritesArrLeft, TalkoffSpritesArrRight
+
+//Создаём Игоря с его координатами
+Talkoff := TTalkoff.CreateTalkoff(305, 505, Form1, TalkoffSpritesArrLeft, TalkoffSpritesArrRight, TalkoffSpritesArrKickFistLeft, TalkoffSpritesArrKickFistRight
                              {TalkoffSpritesArrSitLeft, TalkoffSpritesArrSitRight});
+
 //Включаем таймер отрисовки
 self.TimerFPS.Enabled:=true;
 //выводим через поток
@@ -126,6 +137,7 @@ WriteThread.Priority := tpTimeCritical;
 //InitializeCriticalSection(CS);
 end;
 
+//Инициализация игры
 procedure TForm1.InitGame;
 var
 i:integer;
@@ -135,11 +147,13 @@ begin
 TalkoffSpritesArrLeft := TList.Create;
 For i:=0 to MaxImgTalkoffMoveLeft - 1 Do
    begin
-   tmpBitmap :=TBitMap.Create;
+   tmpBitmap :=TBitmap.Create;
+   //Учитывая путь
    tmpBitmap.LoadFromFile(ExePath+'Graphics\Talkoff\TalkoffMoveLeft\moving_tallf'+IntToStr(i)+'.bmp');
    tmpBitmap.Transparent:=True;
    tmpBitmap.TransparentMode:=tmFixed;
    tmpBitmap.TransparentColor:=clBlack;
+   //Добавляем в список
    TalkoffSpritesArrLeft.Add(tmpBitmap);
    end;
 //Загружаем в спрайты Игоря смотрящего вправо
@@ -153,28 +167,33 @@ For i:=0 to MaxImgTalkoffMoveRight - 1 Do
    tmpBitmap.TransparentColor:=clBlack;
    TalkoffSpritesArrRight.Add(tmpBitmap);
    end;
-//Загружаем в спрайты Фредди сидящего влево
-{FreddySpritesArrSitLeft := TList.Create;
-For i:=0 to MaxImgFreddyMoveSitLeft - 1 Do
+//Загружаем в спрайты Игоря бьющего кулаком влево
+TalkoffSpritesArrKickFistLeft := TList.Create;
+For i:=0 to MaxImgTalkoffFistLeft - 1 Do
    begin
-   tmpBitmap :=TBitMap.Create;
-   tmpBitmap.LoadFromFile(ExePath+'Graphics\Freddy\FreddySitLeft\Freddy'+IntToStr(i)+'.bmp');
+   tmpBitmap :=TBitmap.Create;
+   //Учитывая путь
+   tmpBitmap.LoadFromFile(ExePath+'Graphics\Talkoff\TalkoffKickFistLeft\Hand_left'+IntToStr(i)+'.bmp');
    tmpBitmap.Transparent:=True;
    tmpBitmap.TransparentMode:=tmFixed;
    tmpBitmap.TransparentColor:=clBlack;
-   FreddySpritesArrSitLeft.Add(tmpBitmap);
+   //Добавляем в список
+   TalkoffSpritesArrKickFistLeft.Add(tmpBitmap);
    end;
-//Загружаем в спрайты Фредди сидящего вправо
-FreddySpritesArrSitRight := TList.Create;
-For i:=0 to MaxImgFreddyMoveSitRight - 1 Do
+
+//Загружаем в спрайты Игоря бьющего кулаком вправо
+TalkoffSpritesArrKickFistRight := TList.Create;
+For i:=0 to MaxImgTalkoffFistRight - 1 Do
    begin
-   tmpBitmap :=TBitMap.Create;
-   tmpBitmap.LoadFromFile(ExePath+'Graphics\Freddy\FreddySitRight\Freddy'+IntToStr(i)+'.bmp');
+   tmpBitmap :=TBitmap.Create;
+   //Учитывая путь
+   tmpBitmap.LoadFromFile(ExePath+'Graphics\Talkoff\TalkoffKickFistRight\Hand_right'+IntToStr(i)+'.bmp');
    tmpBitmap.Transparent:=True;
    tmpBitmap.TransparentMode:=tmFixed;
    tmpBitmap.TransparentColor:=clBlack;
-   FreddySpritesArrSitRight.Add(tmpBitmap);
-   end;}
+   //Добавляем в список
+   TalkoffSpritesArrKickFistRight.Add(tmpBitmap);
+   end;
 end;
 
 function TForm1.OverlapRects(R1, R2: TRect): Boolean;
@@ -201,7 +220,9 @@ for i := 0 to MaxStars-1 do
    Stars[i].free;
    end;
 //Удаляем из памяти игровое пространство
+//Мир
 GameWorld.Free;
+//Небо
 GameSky.Free;
 //Удаляем из памяти Игоря
 Talkoff.Free;
@@ -211,12 +232,31 @@ WriteThread.Terminate;
 CriticalSection.free;
 end;
 
-//
+//Опрос клавиатуры. Бывалые программисты посоветовали сделать с помощью библиотек DirectX
 procedure TForm1.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
    Form1.Caption := IntToStr(Key);
    case key of
+   vk_space:
+         begin
+         //Здесь должен устанавливаться маркер, где Игорь бьёт кулаком.
+         Talkoff.TalkoffUseFist := True;
+         if Talkoff.ThereMove = TalkoffdirectionLeft then
+            begin
+            //Включаем прокрутку спрайтов Игоря влево
+            Talkoff.KickLeftindex := 1;
+
+            end;
+         if Talkoff.ThereMove = TalkoffdirectionRight then
+            begin
+            //Включаем прокрутку спрайтов Игоря вправо
+            Talkoff.KickRightindex := 1;
+
+            end;
+
+         end;
+
    vk_left:
          begin
 //Скроллируем игровое пространство на шаг влево
@@ -266,6 +306,7 @@ begin
 Talkoff.sprindexshag := 0;
 end;
 
+//Синхронизация потока
 procedure TForm1.TimerFPSTimer(Sender: TObject);
 begin
 DrawFrame();
@@ -294,7 +335,7 @@ GameSky.Show;
 //Выводим Игоря
 Talkoff.Show;
 //Каждый объект отрисовываем на виртуальный канвас
-//Звёзды
+//Отрисовываем Звёзды
 for i := 0 to MaxStars - 1 do
    begin
    If Stars[i] <> nil then
