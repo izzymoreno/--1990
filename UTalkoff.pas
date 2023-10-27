@@ -7,11 +7,11 @@ uses
 
 Const
 
-//Максимальное значение спрайтов Игоря движения влево и вправо соответственно
+//ГЊГ ГЄГ±ГЁГ¬Г Г«ГјГ­Г®ГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ Г±ГЇГ°Г Г©ГІГ®Гў Г€ГЈГ®Г°Гї Г¤ГўГЁГ¦ГҐГ­ГЁГї ГўГ«ГҐГўГ® ГЁ ГўГЇГ°Г ГўГ® Г±Г®Г®ГІГўГҐГІГ±ГІГўГҐГ­Г­Г®
 MaxImageTalkoff = 3;
 MaxImgTalkoffMoveLeft = 8;
 MaxImgTalkoffMoveRight = 8;
-//Максимальное значение спрайтов Игоря ударов кулаком влево и вправо соответственно
+//ГЊГ ГЄГ±ГЁГ¬Г Г«ГјГ­Г®ГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ Г±ГЇГ°Г Г©ГІГ®Гў Г€ГЈГ®Г°Гї ГіГ¤Г Г°Г®Гў ГЄГіГ«Г ГЄГ®Г¬ ГўГ«ГҐГўГ® ГЁ ГўГЇГ°Г ГўГ® Г±Г®Г®ГІГўГҐГІГ±ГІГўГҐГ­Г­Г®
 MaxImgTalkoffFistLeft = 2;
 MaxImgTalkoffFistRight = 2;
 
@@ -42,12 +42,12 @@ type
   shagx,shagy, sprleftindex, sprrightindex, sprindexshag, KickLeftindex, KickRightindex,
   KickLeftindexshag, KickRightindexshag :integer;
   XTalkoff,YTalkoff,sprindex:integer;
-  //Думаю, что нужно сделать специальный триггер: бьёт ли кулаком Игорь а в методе Show выводить эту анимацию.
+  //Г„ГіГ¬Г Гѕ, Г·ГІГ® Г­ГіГ¦Г­Г® Г±Г¤ГҐГ«Г ГІГј Г±ГЇГҐГ¶ГЁГ Г«ГјГ­Г»Г© ГІГ°ГЁГЈГЈГҐГ°: ГЎГјВёГІ Г«ГЁ ГЄГіГ«Г ГЄГ®Г¬ Г€ГЈГ®Г°Гј Г  Гў Г¬ГҐГІГ®Г¤ГҐ Show ГўГ»ГўГ®Г¤ГЁГІГј ГЅГІГі Г Г­ГЁГ¬Г Г¶ГЁГѕ.
   TalkoffUseFist: boolean;
 
-//Маркер направления Игоря
+//ГЊГ Г°ГЄГҐГ° Г­Г ГЇГ°Г ГўГ«ГҐГ­ГЁГї Г€ГЈГ®Г°Гї
   ThereMove: TTalkoffDirection;
-//Таймер вывода анимации ходьбы Игоря
+//Г’Г Г©Г¬ГҐГ° ГўГ»ГўГ®Г¤Г  Г Г­ГЁГ¬Г Г¶ГЁГЁ ГµГ®Г¤ГјГЎГ» Г€ГЈГ®Г°Гї
   TimerAnimationWalk: TTimer;
   TimerAnimationFist: TTimer;
   procedure Show;
@@ -79,20 +79,20 @@ self.TimerAnimationFist.Interval := round(150);
 self.TimerAnimationFist.OnTimer := self.OnTimerAnimationFist;
 
 //self.TimTimerAnimation.Interval:=round((Random*120)+(Random*60)+1);
-//Направление движения Игоря
+//ГЌГ ГЇГ°Г ГўГ«ГҐГ­ГЁГҐ Г¤ГўГЁГ¦ГҐГ­ГЁГї Г€ГЈГ®Г°Гї
 ThereMove := TalkoffdirectionRight;
 XTalkoff:=X;
 YTalkoff:=Y;
 //self.grad:=0;
 self.owner:=ownerForm;
-//Присваеваем список спрайтов созданных в главном Unit все спрайты Игоря
+//ГЏГ°ГЁГ±ГўГ ГҐГўГ ГҐГ¬ Г±ГЇГЁГ±Г®ГЄ Г±ГЇГ°Г Г©ГІГ®Гў Г±Г®Г§Г¤Г Г­Г­Г»Гµ Гў ГЈГ«Г ГўГ­Г®Г¬ Unit ГўГ±ГҐ Г±ГЇГ°Г Г©ГІГ» Г€ГЈГ®Г°Гї
 
 ImgMassTalkoffMoveLeft := pTalkoffSpritesLeft;
 ImgMassTalkoffMoveRight := pTalkoffSpritesRight;
 ImgMassTalkoffMoveFistLeft := pTalkoffSpritesKickLeft;
 ImgMassTalkoffMoveFistRight := pTalkoffSpritesKickRight;
 
-//Заводим переменные для анимации Игоря
+//Г‡Г ГўГ®Г¤ГЁГ¬ ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г»ГҐ Г¤Г«Гї Г Г­ГЁГ¬Г Г¶ГЁГЁ Г€ГЈГ®Г°Гї
 //TalkoffSit := false;
 shagx:=0;
 shagy:=0;
@@ -105,20 +105,20 @@ KickLeftindexshag := 1;
 KickRightindexshag := -1;
 
 //ThereMove:=OwldirectionCenter;
-//Включаем таймер анимации Игоря
+//Г‚ГЄГ«ГѕГ·Г ГҐГ¬ ГІГ Г©Г¬ГҐГ° Г Г­ГЁГ¬Г Г¶ГЁГЁ Г€ГЈГ®Г°Гї
 self.TimerAnimationWalk.Enabled:=true;
 end;
 
 procedure TTalkoff.OnTimerAnimationFist(Sender: TObject);
 begin
 
-//Если прибавлять индекс спрайта в Show(), то он будет дёргаться 170 раз в секунду.
-//Поэтому создаём отдельный таймер, который будет прибавлять индекс спрайта 2 раза в секунду.
+//Г…Г±Г«ГЁ ГЇГ°ГЁГЎГ ГўГ«ГїГІГј ГЁГ­Г¤ГҐГЄГ± Г±ГЇГ°Г Г©ГІГ  Гў Show(), ГІГ® Г®Г­ ГЎГіГ¤ГҐГІ Г¤ВёГ°ГЈГ ГІГјГ±Гї 170 Г°Г Г§ Гў Г±ГҐГЄГіГ­Г¤Гі.
+//ГЏГ®ГЅГІГ®Г¬Гі Г±Г®Г§Г¤Г ВёГ¬ Г®ГІГ¤ГҐГ«ГјГ­Г»Г© ГІГ Г©Г¬ГҐГ°, ГЄГ®ГІГ®Г°Г»Г© ГЎГіГ¤ГҐГІ ГЇГ°ГЁГЎГ ГўГ«ГїГІГј ГЁГ­Г¤ГҐГЄГ± Г±ГЇГ°Г Г©ГІГ  2 Г°Г Г§Г  Гў Г±ГҐГЄГіГ­Г¤Гі.
 
 
 
 KickLeftindex := KickLeftindex + KickLeftindexshag;
-            //Проверяем индекс массива на единицу
+            //ГЏГ°Г®ГўГҐГ°ГїГҐГ¬ ГЁГ­Г¤ГҐГЄГ± Г¬Г Г±Г±ГЁГўГ  Г­Г  ГҐГ¤ГЁГ­ГЁГ¶Гі
             if KickLeftindex >= MaxImgTalkoffFistLeft then
               begin
               KickLeftindex := 0;
@@ -126,7 +126,7 @@ KickLeftindex := KickLeftindex + KickLeftindexshag;
               end;
 
         KickRightindex := KickRightindex + 1;
-         //Проверяем индекс массива на единицу
+         //ГЏГ°Г®ГўГҐГ°ГїГҐГ¬ ГЁГ­Г¤ГҐГЄГ± Г¬Г Г±Г±ГЁГўГ  Г­Г  ГҐГ¤ГЁГ­ГЁГ¶Гі
          if KickRightindex >= MaxImgTalkoffFistRight then
            begin
            KickRightindex := 0;
@@ -135,13 +135,13 @@ KickLeftindex := KickLeftindex + KickLeftindexshag;
 
 end;
 
-//Здесь реализован механизм смены спрайтов Игоря, когда он идёт влево или вправо в зависимомти от маркера ThereMove
+//Г‡Г¤ГҐГ±Гј Г°ГҐГ Г«ГЁГ§Г®ГўГ Г­ Г¬ГҐГµГ Г­ГЁГ§Г¬ Г±Г¬ГҐГ­Г» Г±ГЇГ°Г Г©ГІГ®Гў Г€ГЈГ®Г°Гї, ГЄГ®ГЈГ¤Г  Г®Г­ ГЁГ¤ВёГІ ГўГ«ГҐГўГ® ГЁГ«ГЁ ГўГЇГ°Г ГўГ® Гў Г§Г ГўГЁГ±ГЁГ¬Г®Г¬ГІГЁ Г®ГІ Г¬Г Г°ГЄГҐГ°Г  ThereMove
 procedure TTalkoff.TimerAnimationProcessing(Sender: TObject);
 begin
-//Проигрываем спрайты удара кулаком влево
-//Здесь мы изменяем номер спрайта удара кулаком влево
+//ГЏГ°Г®ГЁГЈГ°Г»ГўГ ГҐГ¬ Г±ГЇГ°Г Г©ГІГ» ГіГ¤Г Г°Г  ГЄГіГ«Г ГЄГ®Г¬ ГўГ«ГҐГўГ®
+//Г‡Г¤ГҐГ±Гј Г¬Г» ГЁГ§Г¬ГҐГ­ГїГҐГ¬ Г­Г®Г¬ГҐГ° Г±ГЇГ°Г Г©ГІГ  ГіГ¤Г Г°Г  ГЄГіГ«Г ГЄГ®Г¬ ГўГ«ГҐГўГ®
 
-//Здесь мы изменяем номер спрайта удара кулаком вправо
+//Г‡Г¤ГҐГ±Гј Г¬Г» ГЁГ§Г¬ГҐГ­ГїГҐГ¬ Г­Г®Г¬ГҐГ° Г±ГЇГ°Г Г©ГІГ  ГіГ¤Г Г°Г  ГЄГіГ«Г ГЄГ®Г¬ ГўГЇГ°Г ГўГ®
 
 //If (ThereMove = TalkoffdirectionFirstRight) then
 //  begin
@@ -150,7 +150,7 @@ begin
 //      KickRightindexshag := 0;
 //   end;
 
-//Игорь идёт вправо
+//Г€ГЈГ®Г°Гј ГЁГ¤ВёГІ ГўГЇГ°Г ГўГ®
 //If (ThereMove = TalkoffdirectionRight) then
 //   begin
 //   sprrightindex := sprrightindex + sprindexshag;
@@ -158,14 +158,14 @@ begin
 //     sprrightindex := 0;
 //   end;
 
-//Игорь идёт влево
+//Г€ГЈГ®Г°Гј ГЁГ¤ВёГІ ГўГ«ГҐГўГ®
 If (ThereMove = TalkoffdirectionLeft) then
   begin
    sprleftindex := sprleftindex + sprindexshag;
    if sprleftindex >= MaxImgTalkoffMoveLeft then
       sprleftindex := 0;
    end;
-//Игорь идёт вправо
+//Г€ГЈГ®Г°Гј ГЁГ¤ВёГІ ГўГЇГ°Г ГўГ®
 If (ThereMove = TalkoffdirectionRight) then
    begin
    sprrightindex := sprrightindex + sprindexshag;
@@ -179,25 +179,25 @@ begin
 
 //Gravity;
 
-//Отрисовываем Игоря, если он делает удар кулаком влево
+//ГЋГІГ°ГЁГ±Г®ГўГ»ГўГ ГҐГ¬ Г€ГЈГ®Г°Гї, ГҐГ±Г«ГЁ Г®Г­ Г¤ГҐГ«Г ГҐГІ ГіГ¤Г Г° ГЄГіГ«Г ГЄГ®Г¬ ГўГ«ГҐГўГ®
 if TalkoffUseFist = True then
       begin
          If (ThereMove = TalkoffdirectionLeft) then
             begin
             VirtBitmap.Canvas.Draw(self.XTalkoff, self.YTalkoff, self.ImgMassTalkoffMoveFistLeft.Items[KickLeftindex]);
-            //Здесь делаем break, чтобы не выводить спрайт анимации шагов.
+            //Г‡Г¤ГҐГ±Гј Г¤ГҐГ«Г ГҐГ¬ break, Г·ГІГ®ГЎГ» Г­ГҐ ГўГ»ГўГ®Г¤ГЁГІГј Г±ГЇГ°Г Г©ГІ Г Г­ГЁГ¬Г Г¶ГЁГЁ ГёГ ГЈГ®Гў.
             exit;
             end;
          end;
      //TalkoffUseFist := False;
 
-//Отрисовываем Игоря, если он делает удар кулаком вправо
+//ГЋГІГ°ГЁГ±Г®ГўГ»ГўГ ГҐГ¬ Г€ГЈГ®Г°Гї, ГҐГ±Г«ГЁ Г®Г­ Г¤ГҐГ«Г ГҐГІ ГіГ¤Г Г° ГЄГіГ«Г ГЄГ®Г¬ ГўГЇГ°Г ГўГ®
 if (TalkoffUseFist = True) then
    begin
       If (ThereMove = TalkoffdirectionRight) then
          begin
          VirtBitmap.Canvas.Draw(self.XTalkoff, self.YTalkoff, self.ImgMassTalkoffMoveFistRight.Items[KickRightindex]);
-         //Здесь делаем break, чтобы не выводить спрайт анимации шагов.
+         //Г‡Г¤ГҐГ±Гј Г¤ГҐГ«Г ГҐГ¬ break, Г·ГІГ®ГЎГ» Г­ГҐ ГўГ»ГўГ®Г¤ГЁГІГј Г±ГЇГ°Г Г©ГІ Г Г­ГЁГ¬Г Г¶ГЁГЁ ГёГ ГЈГ®Гў.
          exit;
          end;
       //  TalkoffUseFist := False;
@@ -208,25 +208,25 @@ if (TalkoffUseFist = True) then
 //     begin
 //     VirtBitmap.Canvas.Draw(self.XTalkoff, self.YTalkoff, self.ImgMassTalkoffMoveFistLeft.Items[KickLeftindex]);
 //     end;
-//Отрисовываем Игоря, если он делает удар кулаком вправо
+//ГЋГІГ°ГЁГ±Г®ГўГ»ГўГ ГҐГ¬ Г€ГЈГ®Г°Гї, ГҐГ±Г«ГЁ Г®Г­ Г¤ГҐГ«Г ГҐГІ ГіГ¤Г Г° ГЄГіГ«Г ГЄГ®Г¬ ГўГЇГ°Г ГўГ®
 
 //   If (ThereMove = TalkoffdirectionFirstRight) then
 //     begin
 //     VirtBitmap.Canvas.Draw(self.XTalkoff, self.YTalkoff, self. ImgMassTalkoffMoveFistRight.Items[KickRightindex]);
 //     end;
 
-//Отображаем движения Игоря влево
+//ГЋГІГ®ГЎГ°Г Г¦Г ГҐГ¬ Г¤ГўГЁГ¦ГҐГ­ГЁГї Г€ГЈГ®Г°Гї ГўГ«ГҐГўГ®
 
    If (ThereMove = TalkoffdirectionLeft) then
      begin
      VirtBitmap.Canvas.Draw(self.XTalkoff, self.YTalkoff, self.ImgMassTalkoffMoveLeft.Items[sprleftindex]);
      end;
-//Отображаем движения Игоря вправо
+//ГЋГІГ®ГЎГ°Г Г¦Г ГҐГ¬ Г¤ГўГЁГ¦ГҐГ­ГЁГї Г€ГЈГ®Г°Гї ГўГЇГ°Г ГўГ®
    If (ThereMove = TalkoffdirectionRight) then
      begin
      VirtBitmap.Canvas.Draw(self.XTalkoff, self.YTalkoff, self.ImgMassTalkoffMoveRight.Items[sprrightindex]);
      end;
-//Здесь Игорь должен приседать
+//Г‡Г¤ГҐГ±Гј Г€ГЈГ®Г°Гј Г¤Г®Г«Г¦ГҐГ­ ГЇГ°ГЁГ±ГҐГ¤Г ГІГј
    {if (Freddy.FreddySit = false) then
      if (ThereMove = FreddydirectionLeft) then
        begin
@@ -263,18 +263,18 @@ sprindex: byte;
 FirstBrick: integer;
 LastBrick : integer;
 begin
-//Берём в цикле перечсляем все спрайты земли и сравниваем прямоугольник спрайта земли с прямоугольником Фредди.
-//Проверяем, если под ногами Фредди грунт
+//ГЃГҐГ°ВёГ¬ Гў Г¶ГЁГЄГ«ГҐ ГЇГҐГ°ГҐГ·Г±Г«ГїГҐГ¬ ГўГ±ГҐ Г±ГЇГ°Г Г©ГІГ» Г§ГҐГ¬Г«ГЁ ГЁ Г±Г°Г ГўГ­ГЁГўГ ГҐГ¬ ГЇГ°ГїГ¬Г®ГіГЈГ®Г«ГјГ­ГЁГЄ Г±ГЇГ°Г Г©ГІГ  Г§ГҐГ¬Г«ГЁ Г± ГЇГ°ГїГ¬Г®ГіГЈГ®Г«ГјГ­ГЁГЄГ®Г¬ Г”Г°ГҐГ¤Г¤ГЁ.
+//ГЏГ°Г®ГўГҐГ°ГїГҐГ¬, ГҐГ±Г«ГЁ ГЇГ®Г¤ Г­Г®ГЈГ Г¬ГЁ Г”Г°ГҐГ¤Г¤ГЁ ГЈГ°ГіГ­ГІ
 for i := FirstBrick to LastBrick do
   begin
-   //Читаем из массива игрового пространства номер спрайта
+   //Г—ГЁГІГ ГҐГ¬ ГЁГ§ Г¬Г Г±Г±ГЁГўГ  ГЁГЈГ°Г®ГўГ®ГЈГ® ГЇГ°Г®Г±ГІГ°Г Г­Г±ГІГўГ  Г­Г®Г¬ГҐГ° Г±ГЇГ°Г Г©ГІГ 
   sprindex := GameWorld.GameWorldArr[i];
-  //Необходимо пересчитать Xscreen в координаты виртуального экрана.
+  //ГЌГҐГ®ГЎГµГ®Г¤ГЁГ¬Г® ГЇГҐГ°ГҐГ±Г·ГЁГІГ ГІГј Xscreen Гў ГЄГ®Г®Г°Г¤ГЁГ­Г ГІГ» ГўГЁГ°ГІГіГ Г«ГјГ­Г®ГЈГ® ГЅГЄГ°Г Г­Г .
 
   Form1.OverlapRects(R1, R2: TRect): Boolean;
 
   //VirtBitmap.Canvas.Draw(xScreen, GameWorld.WorldY, GameWorld.ImgGameWorld[sprindex]);
-  // Прибавляем 10. 10 - размер спрайтов по 10 пикселей, учтём это
+  // ГЏГ°ГЁГЎГ ГўГ«ГїГҐГ¬ 10. 10 - Г°Г Г§Г¬ГҐГ° Г±ГЇГ°Г Г©ГІГ®Гў ГЇГ® 10 ГЇГЁГЄГ±ГҐГ«ГҐГ©, ГіГ·ГІВёГ¬ ГЅГІГ®
   xScreen:= xScreen + TextureWidth;
   end;
 
@@ -284,36 +284,36 @@ if YFreddy<= 310 then
   end;
 end;}
 
-//Это деструктор объекта Игоря
+//ГќГІГ® Г¤ГҐГ±ГІГ°ГіГЄГІГ®Г° Г®ГЎГєГҐГЄГІГ  Г€ГЈГ®Г°Гї
 destructor TTalkoff.Destroy;
 var
 i:byte;
 begin
-//Здесь мы удаляем из памяти Игоря
+//Г‡Г¤ГҐГ±Гј Г¬Г» ГіГ¤Г Г«ГїГҐГ¬ ГЁГ§ ГЇГ Г¬ГїГІГЁ Г€ГЈГ®Г°Гї
 {For i:=0 to  MaxImgFreddyMoveLeft-1 Do
    begin
-   //Если объект существует в памяти, то мы его удаляем
+   //Г…Г±Г«ГЁ Г®ГЎГєГҐГЄГІ Г±ГіГ№ГҐГ±ГІГўГіГҐГІ Гў ГЇГ Г¬ГїГІГЁ, ГІГ® Г¬Г» ГҐГЈГ® ГіГ¤Г Г«ГїГҐГ¬
    if ImgMassFreddyMoveLeft[i]<>nil then ImgMassFreddyMoveLeft[i].free;
    end;
 For i:=0 to  MaxImgFreddyMoveRight-1 Do
    begin
-   //Если объект существует в памяти, то мы его удаляем
+   //Г…Г±Г«ГЁ Г®ГЎГєГҐГЄГІ Г±ГіГ№ГҐГ±ГІГўГіГҐГІ Гў ГЇГ Г¬ГїГІГЁ, ГІГ® Г¬Г» ГҐГЈГ® ГіГ¤Г Г«ГїГҐГ¬
    if ImgMassFreddyMoveRight[i]<>nil then ImgMassFreddyMoveRight[i].free;
    end;
 For i:=0 to  MaxImgFreddyMoveSitLeft-1 Do
    begin
-   //Если объект существует в памяти, то мы его удаляем
+   //Г…Г±Г«ГЁ Г®ГЎГєГҐГЄГІ Г±ГіГ№ГҐГ±ГІГўГіГҐГІ Гў ГЇГ Г¬ГїГІГЁ, ГІГ® Г¬Г» ГҐГЈГ® ГіГ¤Г Г«ГїГҐГ¬
    if ImgMassFreddyMoveSitLeft[i]<>nil then ImgMassFreddyMoveSitLeft[i].free;
    end;
 For i:=0 to  MaxImgFreddyMoveSitRight-1 Do
    begin
-   //Если объект существует в памяти, то мы его удаляем
+   //Г…Г±Г«ГЁ Г®ГЎГєГҐГЄГІ Г±ГіГ№ГҐГ±ГІГўГіГҐГІ Гў ГЇГ Г¬ГїГІГЁ, ГІГ® Г¬Г» ГҐГЈГ® ГіГ¤Г Г«ГїГҐГ¬
    if ImgMassFreddyMoveSitRight[i]<>nil then ImgMassFreddyMoveSitRight[i].free;
    end;}
-//Удаляем таймер анимации
+//Г“Г¤Г Г«ГїГҐГ¬ ГІГ Г©Г¬ГҐГ° Г Г­ГЁГ¬Г Г¶ГЁГЁ
 TimerAnimationWalk.Free;
 TimerAnimationFist.Free;
-//Вызов деструктора родительского класса
+//Г‚Г»Г§Г®Гў Г¤ГҐГ±ГІГ°ГіГЄГІГ®Г°Г  Г°Г®Г¤ГЁГІГҐГ«ГјГ±ГЄГ®ГЈГ® ГЄГ«Г Г±Г±Г 
 inherited;
 end;
 
