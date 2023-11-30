@@ -4,14 +4,14 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls;
+  Dialogs, ExtCtrls, JPEG;
 
 Const
 
-//РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРїСЂР°Р№С‚РѕРІ Р·РІС‘Р·Рґ
+//Максимальное значение спрайтов звёзд
 MaxImageStar = 5;
 
-//Р’С‹Р±РѕСЂ РЅР°РїСЂР°РІР»РµРЅРёСЏ РґРІРёР¶РµРЅРёСЏ Р·РІС‘Р·Рґ
+//Выбор направления движения звёзд
 type
     TMoveDirection = (directionLeft, directionRight);
 
@@ -21,20 +21,20 @@ type
   public
   Name: string;
   TimerAnimation: TTimer;
-//РџРµСЂРµРјРµРЅРЅС‹Рµ Р·РІС‘Р·Рґ
+//Переменные звёзд
   XStar,YStar: integer;
   sprleftindex,sprrightindex:integer;
   sprminleft,sprminright, sprindex:integer;
   sprmaxright,sprmaxleft,sprstarshag:integer;
 //
   ThereMove: TMoveDirection;
-  //РњР°СЃСЃРёРІ СЃРїСЂР°Р№С‚РѕРІ Р·РІС‘Р·Рґ
-  ImgMassStar: array[0..MaxImageStar-1] of TBitMap;
+  //Массив спрайтов звёзд
+  ImgMassStar: array[0..MaxImageStar-1] of TJPEGImage;
   procedure TimerAnimationProccessing(Sender: TObject);
   procedure Show;
-//РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ Р·РІС‘Р·Рґ
+//Конструктор звёзд
   Constructor CreateStar(X,Y: integer; Move: string; ownerForm: TWinControl);
-//Р”РµСЃС‚СЂСѓРєС‚РѕСЂ Р·РІС‘Р·Рґ
+//Деструктор звёзд
   Destructor Destroy(); override;
   end;
 
@@ -46,24 +46,24 @@ constructor TMyStar.CreateStar(X, Y:integer; Move:string; ownerForm: TWinControl
 var
 i:integer;
 begin
-//РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РіРµРЅРµСЂР°С‚РѕСЂ СЃР»СѓС‡Р°Р№РЅС‹С… С‡РёСЃРµР» РґР»СЏ РјСѓС…
+//Инициализируем генератор случайных чисел для мух
 Randomize;
 XStar:=X;//round(Random*xmax);
 YStar:=Y;//round(Random*ymax);
-//Р—Р°РіСЂСѓР¶Р°РµРј РІСЃРµ СЃРїСЂР°Р№С‚С‹ РіСѓСЃРµРЅРёС†
+//Загружаем все спрайты гусениц
 For i := 0 to MaxImageStar - 1 Do
    begin
-//РЎРѕР·РґР°С‘Рј РјР°СЃСЃРёРІ РёР·РѕР±СЂР°Р¶РµРЅРёР№ Р·РІС‘Р·Рґ
-   ImgMassStar[i]:=TBitMap.Create;
-//Р—Р°РіСЂСѓР¶Р°РµРј СЃРїСЂР°Р№С‚С‹ Р·РІС‘Р·Рґ
-   ImgMassStar[i].LoadFromFile(ExePath + 'Graphics\Star'+IntToStr(i)+'.bmp');
-//Р”РµР»Р°РµРј РїСЂРѕР·СЂР°С‡РЅС‹Р№ С„РѕРЅ
-   ImgMassStar[i].Transparent:=True;
-   ImgMassStar[i].TransparentMode:=tmFixed;
-   ImgMassStar[i].TransparentColor:=clBlack;
-   ImgMassStar[i].Canvas.Brush.Color:=clPurple;
+//Создаём массив изображений звёзд
+   ImgMassStar[i]:=TJPEGImage.Create;
+//Загружаем спрайты звёзд
+   ImgMassStar[i].LoadFromFile(ExePath + 'Graphics\Stars\Star'+IntToStr(i)+'.jpg');
+//Делаем прозрачный фон
+   //ImgMassStar[i].Transparent:=True;
+   //ImgMassStar[i].TransparentMode:=tmFixed;
+   //ImgMassStar[i].TransparentColor:=clBlack;
+   //ImgMassStar[i].Canvas.Brush.Color:=clPurple;
    end;
-//Р—Р°РІРѕРґРёРј РїРµСЂРµРјРµРЅРЅС‹Рµ РґР»СЏ Р°РЅРёРјР°С†РёРё Р·РІРµР·РґС‹
+//Заводим переменные для анимации звезды
 sprindex := 0;
 sprstarshag := 1;
 sprminleft := 0;
@@ -73,7 +73,7 @@ sprmaxright := 3;
 //sprleftindex := sprminleft;
 //sprrightindex := sprminright;
 ThereMove := directionLeft;
-//Р’РєР»СЋС‡Р°РµРј С‚Р°Р№РјРµСЂ Р·РІС‘Р·Рґ
+//Включаем таймер звёзд
 self.TimerAnimation := TTimer.Create(nil);
 self.TimerAnimation.OnTimer:=self.TimerAnimationProccessing;
 self.TimerAnimation.Interval:=round((Random*200)+500);
@@ -82,10 +82,10 @@ end;
 
 procedure TMyStar.TimerAnimationProccessing(Sender: TObject);
 begin
-//РўР°Р№РјРµСЂ РјРёРіР°РЅРёСЏ Р·РІС‘Р·Рґ
-//РќРµРѕР±С…РѕРґРёРјРѕ РјРµРЅСЏС‚СЊ РёРЅРґРµРєСЃС‹ Сѓ СЃРїСЂР°Р№С‚РѕРІ Р·РІС‘Р·Рґ.
-//Р‘РµСЂС‘Рј РїРµСЂРІСѓСЋ Р·РІРµР·РґСѓ Рё РїСЂРёСЃРІР°РёРІР°РµРј РµР№ РјРёРЅРёРјР°Р»СЊРЅС‹Р№ РёРЅРґРµРєСЃ,
-//Р‘РµСЂС‘Рј РІС‚РѕСЂСѓСЋ Р·РІРµР·РґСѓ Рё РїСЂРёСЃРІР°РµРІР°РµРј РµР№ РјРёРЅРёРјР°Р»СЊРЅС‹Р№ РёРЅРґРµРєСЃ, Р±РµСЂС‘Рј Рє-С‚СѓСЋ Р·РІРµР·РґСѓ Рё С‚Р°Рє СЃРѕ РІСЃРµРјРё Р·РІС‘Р·РґР°РјРё
+//Таймер мигания звёзд
+//Необходимо менять индексы у спрайтов звёзд.
+//Берём первую звезду и присваиваем ей минимальный индекс,
+//Берём вторую звезду и присваеваем ей минимальный индекс, берём к-тую звезду и так со всеми звёздами
 if sprindex > MaxImageStar - 1 then
   begin
   self.sprstarshag := -1;
@@ -104,20 +104,20 @@ If (self.ThereMove = directionLeft) then
      VirtBitmap.Canvas.Draw(self.XStar, self.YStar, self.ImgMassStar[self.sprindex])
 end;
 
-//Р­С‚Рѕ РґРµСЃС‚СЂСѓРєС‚РѕСЂ Р·РІС‘Р·Рґ
+//Это деструктор звёзд
 destructor TMyStar.Destroy;
 var
 i:byte;
 begin
-//Р—РґРµСЃСЊ РјС‹ СѓРґР°Р»СЏРµРј РёР· РїР°РјСЏС‚Рё Р·РІС‘Р·РґС‹
+//Здесь мы удаляем из памяти звёзды
 For i:=0 to MaxImageStar - 1 Do
    begin
-   //Р•СЃР»Рё РѕР±СЉРµРєС‚ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ РїР°РјСЏС‚Рё, С‚Рѕ РјС‹ РµРіРѕ СѓРґР°Р»СЏРµРј
+   //Если объект существует в памяти, то мы его удаляем
    if ImgMassStar[i] <> nil then Freeandnil(ImgMassStar[i]);
    end;
-//РЈРґР°Р»СЏРµРј С‚Р°Р№РјРµСЂ
+//Удаляем таймер
 TimerAnimation.free;
-//Р’С‹Р·РѕРІ РґРµСЃС‚СЂСѓРєС‚РѕСЂР° СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ РєР»Р°СЃСЃР°
+//Вызов деструктора родительского класса
 inherited;
 end;
 

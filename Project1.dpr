@@ -2,10 +2,10 @@ program Project1;
 
 uses
   Forms,
-  UMainProg in 'C:\Freddy Hardest[Thread]\UMainProg.pas' {Form1},
-  UStar in 'C:\Freddy Hardest[Thread]\UStar.pas',
-  UWorld in 'C:\Freddy Hardest[Thread]\UWorld.pas',
-  UTalkoff in 'C:\Freddy Hardest[Thread]\UTalkoff.pas';
+  UMainProg in 'UMainProg.pas' {Form1},
+  UStar in 'UStar.pas',
+  UWorld in 'UWorld.pas',
+  UTalkoff in 'UTalkoff.pas';
 
 {$R *.RES}
 

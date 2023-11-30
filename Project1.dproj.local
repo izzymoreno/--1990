@@ -1,20 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.665,D:\Freddy Hardest\Unit2.pas=D:\Freddy Hardest\UFreddy.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.112,D:\Move Stars\UMainProg.dfm=D:\Move Stars\MainProg.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.073,D:\Move Stars\UStar.pas=D:\Move Stars\Star1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.073,D:\Move Stars\Star1.pas=D:\Move Stars\UStar.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.326,D:\Move Stars\Star1.pas=D:\Move Stars\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.219,C:\Freddy Hardest[Thread]\UMainProg.pas=C:\Distrib\Delphi\Кумир-1990[Jpg] 22_08_2023\UMainProg.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.173,=D:\Freddy Hardest\Unit2.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.017,D:\Move Stars\Unit1.dfm=D:\Move Stars\MainProg.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.016,D:\Move Stars\Unit1.pas=D:\Move Stars\MainProg.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.112,D:\Move Stars\UMainProg.pas=D:\Move Stars\MainProg.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.177,C:\Freddy Hardest[Thread]\UTalkoff.pas=C:\Distrib\Delphi\Кумир-1990[Jpg] 22_08_2023\UTalkoff.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.874,D:\Move Stars\Project1.dproj=D:\Move Stars\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.672,C:\КУМИР-1990\Project1.dproj=C:\КУМИР-1990\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.665,D:\Freddy Hardest\UFreddy.pas=D:\Freddy Hardest\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.748,C:\КУМИР-1990\Project1.dproj=C:\КУМИР-1990\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.889,C:\Freddy Hardest[Thread]\UWorld.pas=C:\Distrib\Delphi\Кумир-1990[Jpg] 22_08_2023\UWorld.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.219,C:\Freddy Hardest[Thread]\UMainProg.dfm=C:\Distrib\Delphi\Кумир-1990[Jpg] 22_08_2023\UMainProg.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.903,D:\Move Stars\Unit2.pas=D:\Move Stars\World.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.448,C:\Freddy Hardest[Thread]\Project1.dproj=C:\КУМИР-1990\Project1.dproj</Transaction>
     <Transaction>1899.12.30 00:00:00.000.277,=D:\Move Stars\Unit2.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.677,C:\Freddy Hardest[Thread]\UTalkoff.pas=C:\Freddy Hardest[Thread]\UFreddy.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.903,D:\Move Stars\World.pas=D:\Move Stars\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.717,D:\Move Stars\World.pas=D:\Move Stars\UWorld.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.384,=D:\Move Stars\Unit2.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.448,C:\КУМИР-1990\Project1.dproj=C:\Freddy Hardest[Thread]\Project1.dproj</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.717,D:\Move Stars\UWorld.pas=D:\Move Stars\World.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.326,D:\Move Stars\Unit2.pas=D:\Move Stars\Star1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.677,C:\Freddy Hardest[Thread]\UFreddy.pas=C:\Freddy Hardest[Thread]\UTalkoff.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.017,D:\Move Stars\MainProg.dfm=D:\Move Stars\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.112,D:\Move Stars\MainProg.dfm=D:\Move Stars\UMainProg.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.016,D:\Move Stars\MainProg.pas=D:\Move Stars\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.961,C:\Freddy Hardest[Thread]\UStar.pas=C:\Distrib\Delphi\Кумир-1990[Jpg] 22_08_2023\UStar.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.112,D:\Move Stars\MainProg.pas=D:\Move Stars\UMainProg.pas</Transaction>
   </Transactions>
 </BorlandProject>

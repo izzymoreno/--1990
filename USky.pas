@@ -7,33 +7,33 @@ uses
   Dialogs, ExtCtrls, UWorld, JPEG;
 
   Const
-//РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РґР»РёРЅР° РёРіСЂРѕРІРѕРіРѕ РјРёСЂР°
-ImgSkyMax = 6;
-// Р—РґРµСЃСЊ РёРјРµРµС‚СЃСЏ РІ РІРёРґСѓ РґР»РёРЅР° СЃРµРіРјРµРЅС‚Р° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ 16 РёР»Рё 10
+//Максимальное длина игрового мира
+ImgSkyMax = 8;
+// Здесь имеется в виду длина сегмента изображения 16 или 10
   TextureWidth = 108;
-// Р”Р»РёРЅР° Р·РІС‘Р·РґРЅРѕРіРѕ РЅРµР±Р°
-  GameSkyMaxX = 14;
-//РњР°СЃСЃРёРІ Р·РІС‘Р·РґРЅРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР°
-  GameSkyConst: array[0..GameSkyMaxX - 1] of byte = (0, 1, 2, 3, 4, 5, 6,
-                                                     0, 1, 2, 3, 4, 5, 6);
-                                                      // 0, 1, 2, 3, 4, 5, 6, 0, 0, 0,
-                                                      // 0, 1, 2, 3, 4, 5, 6, 0, 0, 0,
-                                                      // 0, 1, 2, 3, 4, 5, 6, 0, 0, 0,
-                                                      // 0, 1, 2, 3, 4, 5, 6, 0, 0, 0,
-                                                      // 0, 1, 2, 3, 4, 5, 6, 0, 0, 0,
-                                                      // 0, 1, 2, 3, 4, 5, 6, 0, 0, 0,
-                                                      // 0, 1, 2, 3, 4, 5, 6, 0, 0, 0,
-                                                      // 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+// Длина дальнего плана, например Небоскрёбов
+  GameSkyMaxX = 18;
+//Массив звёздного пространства
+  GameSkyConst: array[0..GameSkyMaxX - 1] of byte = (0, 1, 2, 3, 4, 5, 6, 7, 8,
+  0, 1, 2, 3, 4, 5, 6, 7, 8);
+//                                                     0, 1, 2, 3, 4, 5, 6, 7, 8);
+//                                                     0, 1, 2, 3, 4, 5, 6, 7, 8,
+//                                                     0, 1, 2, 3, 4, 5, 6, 7, 8,
+//                                                     0, 1, 2, 3, 4, 5, 6, 7, 8,
+//                                                     0, 1, 2, 3, 4, 5, 6, 7, 8,
+//                                                     0, 1, 2, 3, 4, 5, 6, 7, 8,
+//                                                     0, 1, 2, 3, 4, 5, 6, 7, 8,
+//                                                     0, 1, 2, 3, 4, 5, 6, 7, 8);
 
 type
 
   TGameSky = class (TObject)
   public
   //TimerAnimation: TTimer;
-  //РњР°СЃСЃРёРІ СЃРїСЂР°Р№С‚РѕРІ РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР°
+  //Массив спрайтов игрового пространства
   SkyX, SkyY: integer;
   ImgGameSky: array[0..ImgSkyMax] of TJPEGImage;
-  //Р—Р°РґР°С‘Рј СЃРїСЂР°Р№С‚С‹ РЅРµР±Р°
+  //Задаём спрайты неба
   GameSkyArr: array[0..GameSkyMaxX - 1] of integer;
   //procedure TimerAnimationProccessing(Sender: TObject);
   procedure Show;
@@ -49,9 +49,9 @@ constructor TGameSky.CreateGameSky(ownerForm: TWinControl);
 var
 i:integer;
 begin
-//РџСЂРёСЃРІР°РёРІР°РµРј Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅС‹Рј РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР° РїРѕ X Рё Y
+//Присваиваем значение переменным игрового пространства по X и Y
 SkyX := 0;//40
-SkyY := 150;
+SkyY := 120;
 
 for i := 0 to length(GameSkyArr) - 1 Do
   begin
@@ -68,7 +68,7 @@ for i := 0 to length(GameSkyArr) - 1 Do
 //   ImgGameSky[0].TransparentColor:=clBlack;
    //ImgMassStar[i].Canvas.Brush.Color:=clPurple;
    end;
-//Р’РєР»СЋС‡Р°РµРј С‚Р°Р№РјРµСЂ Р·РІС‘Р·Рґ
+//Включаем таймер звёзд
 //self.TimerAnimation := TTimer.Create(nil);
 //self.TimerAnimation.OnTimer:=self.TimerAnimationProccessing;
 //self.TimerAnimation.Interval:=round((Random*200)+500);
@@ -84,7 +84,7 @@ LastBrick : integer;
 begin
 xScreen := 0;
 
-//РњС‹ РґРѕР»Р¶РЅС‹ РїРёРєСЃРµР»Рё РєРѕРѕСЂРґРёРЅР°С‚С‹ XWorld РїРµСЂРµСЃС‡РёС‚Р°С‚СЊ РІ РїРµСЂРІС‹Р№ РєРёСЂРїРёС‡, СЃ РєРѕС‚РѕСЂРѕРіРѕ РјС‹ РґРѕР»Р¶РЅС‹ РЅР°С‡Р°С‚СЊ РІС‹РІРѕРґРёС‚СЊ РёРіСЂРѕРІРѕРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ.
+//Мы должны пиксели координаты XWorld пересчитать в первый кирпич, с которого мы должны начать выводить игровое пространство.
 FirstBrick := round(SkyX div TextureWidth);
 LastBrick := FirstBrick + round(VirtBitmap.Width div TextureWidth * TextureWidth/TextureWidth);
 if FirstBrick <= 0 then
@@ -100,37 +100,37 @@ if LastBrick >= Length(GameSkyArr) then
 xScreen := -round(SkyX - SkyX div TextureWidth * TextureWidth);
 for i := FirstBrick to LastBrick do
   begin
-   //Р§РёС‚Р°РµРј РёР· РјР°СЃСЃРёРІР° РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР° РЅРѕРјРµСЂ СЃРїСЂР°Р№С‚Р°
+   //Читаем из массива игрового пространства номер спрайта
   sprindex := self.GameSkyArr[i];
-  //РќРµРѕР±С…РѕРґРёРјРѕ РїРµСЂРµСЃС‡РёС‚Р°С‚СЊ Xscreen РІ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРёСЂС‚СѓР°Р»СЊРЅРѕРіРѕ СЌРєСЂР°РЅР°.
+  //Необходимо пересчитать Xscreen в координаты виртуального экрана.
   VirtBitmap.Canvas.Draw(xScreen, self.SkyY, self.ImgGameSky[sprindex]);
-  // РџСЂРёР±Р°РІР»СЏРµРј 10. 10 - СЂР°Р·РјРµСЂ СЃРїСЂР°Р№С‚РѕРІ РїРѕ 10 РїРёРєСЃРµР»РµР№, СѓС‡С‚С‘Рј СЌС‚Рѕ
+  // Прибавляем 10. 10 - размер спрайтов по 10 пикселей, учтём это
   xScreen:= xScreen + TextureWidth;
   end;
 
-//VirtBitmap.Canvas.Font.Size := 8;
-//VirtBitmap.Canvas.Font.Color := clWhite;
-//VirtBitmap.Canvas.TextOut( 300, 10, 'USkyX=' + inttostr(SkyX));
-//VirtBitmap.Canvas.TextOut( 300, 30, 'FirstBrickStars=' + inttostr(FirstBrick));
-//VirtBitmap.Canvas.TextOut( 300, 50, 'LastBrickStars=' + inttostr(LastBrick));
+VirtBitmap.Canvas.Font.Size := 8;
+VirtBitmap.Canvas.Font.Color := clWhite;
+VirtBitmap.Canvas.TextOut( 300, 10, 'USkyX=' + inttostr(SkyX));
+VirtBitmap.Canvas.TextOut( 300, 30, 'FirstBrickStars=' + inttostr(FirstBrick));
+VirtBitmap.Canvas.TextOut( 300, 50, 'LastBrickStars=' + inttostr(LastBrick));
 
 end;
 
 
-//Р­С‚Рѕ РґРµСЃС‚СЂСѓРєС‚РѕСЂ СЃРїСЂР°Р№С‚РѕРІ РёРіСЂРѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР°
+//Это деструктор спрайтов игрового пространства
 destructor TGameSky.Destroy;
 var
 i:byte;
 begin
-//Р—РґРµСЃСЊ РјС‹ СѓРґР°Р»СЏРµРј РёР· РїР°РјСЏС‚Рё Р·РІС‘Р·РґС‹
+//Здесь мы удаляем из памяти звёзды
 For i:=0 to length(ImgGameSky) - 1  Do
    begin
    ImgGameSky[i].Free;
    //ImgMassStar[i].Canvas.Brush.Color:=clPurple;
    end;
-//РЈРґР°Р»СЏРµРј С‚Р°Р№РјРµСЂ
+//Удаляем таймер
 //TimerAnimation.free;
-//Р’С‹Р·РѕРІ РґРµСЃС‚СЂСѓРєС‚РѕСЂР° СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ РєР»Р°СЃСЃР°
+//Вызов деструктора родительского класса
 inherited;
 end;
 
